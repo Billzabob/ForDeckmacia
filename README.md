@@ -8,4 +8,4 @@
 
 A Scala implementation of Legends of Runeterra deck codes
 
-![For Deckmacia](https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/ForDeckmacia.png)
+<img src="https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/ForDeckmacia.png" height="300px"/>
