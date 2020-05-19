@@ -1,0 +1,4 @@
+package fordeckmacia
+
+object ForDeckmacia {
+}
