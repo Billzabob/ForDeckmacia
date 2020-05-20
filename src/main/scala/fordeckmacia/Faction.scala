@@ -13,4 +13,8 @@ object Faction {
   case object PiltoverAndZaun extends Faction { val id = "PZ"; val int = 4 }
   case object ShadowIsles     extends Faction { val id = "SI"; val int = 5 }
   case object Bilgewater      extends Faction { val id = "BW"; val int = 6 }
+
+  private val allRegions = List(Demacia, Freljord, Ionia, Noxus, PiltoverAndZaun, ShadowIsles, Bilgewater)
+
+  def fromInt(int: Int): Option[Faction] = allRegions.find(_.int == int)
 }

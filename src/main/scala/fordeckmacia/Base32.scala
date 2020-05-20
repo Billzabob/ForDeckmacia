@@ -29,15 +29,22 @@ object Base32 {
       .foldLeft("")(_ + _)
   }
 
-  def decode(plainText: String): List[Byte] = {
-    plainText
-      .map(charsToBytes(_))
-      .map(_.toBinaryString.reverse.padTo(5, "0").reverse.mkString)
-      .foldLeft("")(_ + _)
-      .dropRight((plainText.length * 5) - (((plainText.length * 5) / 8) * 8))
-      .grouped(8)
-      .toList
-      .map(Integer.parseInt(_, 2))
-      .map(_.toByte)
+  def decode(plainText: String): Option[List[Byte]] = {
+    plainText.toUpperCase
+      .map(charsToBytes.get)
+      .foldRight(Option(List.empty[Int])) {
+        case (Some(byte), Some(bytes)) => Some(byte :: bytes)
+        case (_, None)                 => None
+        case (None, _)                 => None
+      }
+      .map(
+        _.map(_.toBinaryString.reverse.padTo(5, "0").reverse.mkString)
+          .foldLeft("")(_ + _)
+          .dropRight((plainText.length * 5) - (((plainText.length * 5) / 8) * 8))
+          .grouped(8)
+          .toList
+          .map(Integer.parseInt(_, 2))
+          .map(_.toByte)
+      )
   }
 }
