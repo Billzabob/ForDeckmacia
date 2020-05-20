@@ -6,8 +6,7 @@ lazy val commonSettings = Seq(
   name := "fordeckmacia",
   organization := "com.github",
   scalaVersion := "2.13.2",
-  crossScalaVersions := List(scalaVersion.value, "2.12.11"),
-  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+  crossScalaVersions := List(scalaVersion.value, "2.12.11")
 )
 
 lazy val releaseSettings = Seq(
