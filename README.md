@@ -7,7 +7,7 @@
 
 # For Deckmacia!
 
-A no-dependency Scala implementation of Legends of Runeterra deck codes
+A zero-dependency Scala implementation of Legends of Runeterra deck codes
 
 ```
 // available for 2.12, 2.13
