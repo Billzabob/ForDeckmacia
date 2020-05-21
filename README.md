@@ -1,4 +1,4 @@
-<img align="right" src="https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/demacia.png" height="150px" style="padding-left: 20px"/>
+<img align="right" src="https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/demacia.png" height="125px" style="padding-left: 20px"/>
 
 
 [![](https://github.com/Billzabob/ForDeckmacia/workflows/build/badge.svg)](https://github.com/Billzabob/ForDeckmacia/actions?query=workflow%3Abuild)
