@@ -5,10 +5,11 @@ case class Deck(cards: List[Card]) {
 
   def encode: String = Deck.encode(this)
 
-  override def equals(a: Any) = a match {
-    case Deck(otherCards) => cards.sortBy(_.code) == otherCards.sortBy(_.code)
-    case _ => false
-  }
+  override def equals(a: Any) =
+    a match {
+      case Deck(otherCards) => cards.sortBy(_.code) == otherCards.sortBy(_.code)
+      case _                => false
+    }
 
   override def hashCode = cards.sortBy(_.code).hashCode
 }
