@@ -27,8 +27,8 @@ object DeckTest extends Properties("Deck") {
     } yield Deck(cards)
 
   property("idempotent") = forAll(deckGenerator) { deck: Deck =>
-    val encoded = Deck.encode(deck)
-    val decoded = Deck.decode(encoded) 
+    val encoded   = Deck.encode(deck)
+    val decoded   = Deck.decode(encoded)
     val reEncoded = decoded.map(Deck.encode)
     decoded == Some(deck) && reEncoded == Some(encoded)
   }
