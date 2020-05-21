@@ -11,7 +11,7 @@ A no-dependency Scala implementation of Legends of Runeterra deck codes
 
 ```
 // available for 2.12, 2.13
-libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "0.1.1"
+libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```
 
 ### Example ###

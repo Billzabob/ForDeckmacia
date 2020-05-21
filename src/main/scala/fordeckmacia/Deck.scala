@@ -19,7 +19,7 @@ object Deck {
     for {
       bytes     <- Base32.decode(code)
       firstByte <- bytes.headOption
-      rest      <- if (firstByte == prefix) Some(bytes.tail) else None
+      rest      <- if (checkVersion(firstByte)) Some(bytes.tail) else None
       result    <- decodeInts(VarInt.fromBytes(rest).map(_.toInt))
     } yield result
 
@@ -80,5 +80,14 @@ object Deck {
     values.map(VarInt.fromInt).flatMap(_.bytes)
   }
 
-  val prefix = 0x11.toByte
+  private def checkVersion(byte: Byte): Boolean = {
+    val format  = (byte & 0xf0) >> 4
+    val version = byte & 0x0f
+
+    (format == supportedFormat && version <= maxSupportedVersion)
+  }
+
+  val supportedFormat     = 1
+  val maxSupportedVersion = 2
+  val prefix              = (supportedFormat << 4 | maxSupportedVersion).toByte
 }
