@@ -10,6 +10,8 @@ object VarInt {
     varInt.bytes.foldLeft(0)((int, byte) => (int << 7) + (byte & 0x7f))
 
   def fromInt(int: Int): VarInt = {
+    require(int >= 0, "Can't encode a negative integer as VarInt")
+
     def go(shiftAmount: Int): List[Byte] = {
       val rest = (int >> shiftAmount)
       if (rest == 0) Nil
@@ -36,4 +38,6 @@ object VarInt {
 
     group(Nil, bytes, true).reverse.map(_.reverse).map(VarInt.apply)
   }
+
+  def toBytes(varInts: List[VarInt]): List[Byte] = varInts.flatMap(_.bytes)
 }
