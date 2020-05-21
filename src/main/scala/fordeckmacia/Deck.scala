@@ -19,7 +19,7 @@ object Deck {
     for {
       bytes     <- Base32.decode(code)
       firstByte <- bytes.headOption
-      rest      <- if (checkVersion(firstByte)) Some(bytes.tail) else None
+      rest      <- if (checkVersion(firstByte)) Some(bytes.tail) else throw unsupportedVersion(firstByte)
       result    <- decodeInts(VarInt.fromBytes(rest).map(_.toInt))
     } yield result
 
@@ -90,4 +90,7 @@ object Deck {
   val supportedFormat     = 1
   val maxSupportedVersion = 2
   val prefix              = (supportedFormat << 4 | maxSupportedVersion).toByte
+
+  def unsupportedVersion(version: Byte) =
+    new RuntimeException(s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version")
 }
