@@ -21,7 +21,7 @@ object DeckTest extends Properties("Deck") {
 
   val deckGenerator: Gen[Deck] =
     for {
-      cardStream <- Gen.infiniteLazyList(cardsGenerator)
+      cardStream <- Gen.listOfN(40, cardsGenerator)
       numCards   <- Gen.choose(0, 40) // Can have 0 to 40 cards in a deck
       cards       = cardStream.flatten.take(numCards).toList
     } yield Deck(cards)
