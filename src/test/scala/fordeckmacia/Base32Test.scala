@@ -5,6 +5,9 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class Base32Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
+
+  implicit val config = PropertyCheckConfiguration(minSuccessful = 10000)
+
   "base32" should "be idempotent" in {
     forAll { bytes: List[Byte] =>
       val encoded   = Base32.encode(bytes)

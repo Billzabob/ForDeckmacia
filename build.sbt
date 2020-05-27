@@ -7,9 +7,13 @@ lazy val commonSettings = Seq(
   organization := "com.github",
   scalaVersion := "2.13.2",
   crossScalaVersions := List(scalaVersion.value, "2.12.11"),
-  libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.3" % Test,
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.2" % Test,
-  libraryDependencies += "org.scalatestplus" %% "scalacheck-1-14" % "3.1.1.1" % Test
+  libraryDependencies ++= Seq(
+    "org.scodec" %% "scodec-core" % "1.11.7",
+    "org.scodec" %% "scodec-cats" % "1.0.0",
+    "org.scalacheck" %% "scalacheck" % "1.14.3" % Test,
+    "org.scalatest" %% "scalatest" % "3.1.2" % Test,
+    "org.scalatestplus" %% "scalacheck-1-14" % "3.1.1.1" % Test
+  )
 
 )
 

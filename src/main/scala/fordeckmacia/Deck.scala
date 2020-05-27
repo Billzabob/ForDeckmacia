@@ -1,9 +1,15 @@
 package fordeckmacia
-import scala.collection.immutable.Nil
+
+import cats.implicits._
+import scodec.{Attempt, Decoder, Encoder, Err}
+import scodec.bits.BitVector
+import scodec.codecs.{byte, vintL}
+import scodec.interop.cats._
+import scodec.SizeBound
 
 case class Deck(cards: List[Card]) {
 
-  def encode: String = Deck.encode(this)
+  def encode: Attempt[String] = Deck.encode(this)
 
   override def equals(a: Any) =
     a match {
@@ -15,82 +21,62 @@ case class Deck(cards: List[Card]) {
 }
 
 object Deck {
-  def decode(code: String): Option[Deck] =
-    for {
-      bytes     <- Base32.decode(code)
-      firstByte <- bytes.headOption
-      rest      <- if (checkVersion(firstByte)) Some(bytes.tail) else throw unsupportedVersion(firstByte)
-      result    <- decodeInts(VarInt.fromBytes(rest).map(_.toInt))
-    } yield result
+  def decode(code: String): Attempt[Deck] =
+    Attempt.fromOption(Base32.decode(code), Err("Not valid Base32")).flatMap(bytes => decoder.complete.decodeValue(BitVector(bytes)))
 
-  private def decodeInts(values: List[Int]): Option[Deck] = loopCardCounts(values, 3)
+  def encode(deck: Deck): Attempt[String] =
+    encoder.encode(deck).map(bits => Base32.encode(bits.toByteArray.toList))
 
-  def encode(deck: Deck): String = {
-    val counts: Map[Card, Int] = deck.cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) }
+  val supportedFormat     = 1
+  val maxSupportedVersion = 2
 
-    val cardsOf3 = orderCards(counts, 3)
-    val cardsOf2 = orderCards(counts, 2)
-    val cardsOf1 = orderCards(counts, 1)
+  private val prefix = (supportedFormat << 4 | maxSupportedVersion).toByte
 
-    Base32.encode(prefix :: encodeOrderedValues(cardsOf3) ::: encodeOrderedValues(cardsOf2) ::: encodeOrderedValues(cardsOf1))
-  }
+  private case class SetFactionPair(set: Int, faction: Faction)
 
-  private def loopFactions(remaining: List[Int], setFactionCountLeft: Int, cards: Option[List[Card]] = Some(Nil)): Option[(List[Card], List[Int])] = {
-    remaining match {
-      case _ if cards.isEmpty            => None
-      case _ if setFactionCountLeft == 0 => cards.map(cards => (cards, remaining))
-      case setFactions :: next =>
-        val (ours, rest) = next.splitAt(setFactions + 2)
-        val newCards = for {
-          set        <- ours.lift(0)
-          factionInt <- ours.lift(1)
-          faction    <- Faction.fromInt(factionInt)
-        } yield ours.drop(2).take(setFactions).map(cardId => Card(set, faction, cardId))
-        loopFactions(rest, setFactionCountLeft - 1, cards.flatMap(cards => newCards.map(_ ::: cards)))
-      case Nil => None
-    }
-  }
+  private val encoder: Encoder[Deck] =
+    new Encoder[Deck] {
+      def encode(deck: Deck) =
+        for {
+          prefix   <- byte.encode(prefix)
+          cardsOf3 <- encodeCardCount(deck, 3)
+          cardsOf2 <- encodeCardCount(deck, 2)
+          cardsOf1 <- encodeCardCount(deck, 1)
+        } yield prefix ++ cardsOf3 ++ cardsOf2 ++ cardsOf1
 
-  private def loopCardCounts(values: List[Int], cardCount: Int, deck: Option[Deck] = Some(Deck(Nil))): Option[Deck] =
-    if (cardCount == 0) deck
-    else {
-      for {
-        factionCount       <- values.headOption
-        (cards, remaining) <- loopFactions(values.drop(1), factionCount)
-        deck               <- loopCardCounts(remaining, cardCount - 1, deck.map(deck => Deck(deck.cards ::: cards.flatMap(card => List.fill(cardCount)(card)))))
-      } yield deck
+      def sizeBound = SizeBound.atLeast(32)
+
+      private def encodeCardCount(deck: Deck, cardCount: Int) = {
+        val cardsOfN = deck.cards.groupBy(card => card).filter(_._2.size == cardCount).keySet.groupBy(card => SetFactionPair(card.set, card.faction)).toList
+        for {
+          cardCount <- vintL.encode(cardsOfN.size)
+          cards     <- cardsOfN.sortBy(_._2.size).foldMapM { case (setFaction, cards) => encodeSetFaction(setFaction, cards) }
+        } yield cardCount ++ cards
+      }
+
+      private def encodeSetFaction(setFaction: SetFactionPair, cards: Set[Card]) =
+        for {
+          count   <- vintL.encode(cards.size)
+          set     <- vintL.encode(setFaction.set)
+          faction <- vintL.encode(setFaction.faction.int)
+          cards   <- cards.toList.map(_.cardNumber).sorted.foldMapM(vintL.encode)
+        } yield count ++ set ++ faction ++ cards
     }
 
-  private def orderCards(cardCounts: Map[Card, Int], count: Int): List[List[Card]] = {
-    cardCounts
-      .filter { case (_, c) => c == count }
-      .keySet
-      .groupBy(card => (card.set, card.faction))
-      .values
-      .toList
-      .sortBy(_.size)
-      .map(_.toList.sortBy(_.code))
-  }
-
-  private def encodeOrderedValues(orderedCards: List[List[Card]]): List[Byte] = {
-    val values = orderedCards.size :: orderedCards.flatMap { factionCards =>
-      factionCards.size :: factionCards.head.set :: factionCards.head.faction.int :: factionCards.map(_.cardNumber)
-    }
-
-    values.map(VarInt.fromInt).flatMap(_.bytes)
-  }
+  private val decoder: Decoder[Deck] = for {
+    version  <- byte
+    _        <- Decoder.liftAttempt(Attempt.guard(checkVersion(version), Err(unsupportedVersion(version))))
+    cardsOf3 <- Card.decoder(3)
+    cardsOf2 <- Card.decoder(2)
+    cardsOf1 <- Card.decoder(1)
+  } yield Deck(cardsOf3 ::: cardsOf2 ::: cardsOf1)
 
   private def checkVersion(byte: Byte): Boolean = {
     val format  = (byte & 0xf0) >> 4
     val version = byte & 0x0f
-
     (format == supportedFormat && version <= maxSupportedVersion)
   }
 
-  val supportedFormat     = 1
-  val maxSupportedVersion = 2
-  val prefix              = (supportedFormat << 4 | maxSupportedVersion).toByte
-
-  def unsupportedVersion(version: Byte) =
-    new RuntimeException(s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version")
+  private def unsupportedVersion(version: Byte) =
+    s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version"
 }

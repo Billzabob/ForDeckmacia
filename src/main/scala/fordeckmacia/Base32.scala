@@ -1,6 +1,7 @@
 package fordeckmacia
 
 // Probably a really inefficient and awful way to do this but it works for now :)
+// Scodec currently only supports Base64 and Base58 but will support Base32 in a future release
 object Base32 {
   val chars = ('A' to 'Z') ++ ('2' to '7')
   val bytes = 0 to 31
