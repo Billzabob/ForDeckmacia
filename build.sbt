@@ -12,7 +12,7 @@ lazy val commonSettings = Seq(
     "org.scodec" %% "scodec-cats" % "1.0.0",
     "org.scalacheck" %% "scalacheck" % "1.14.3" % Test,
     "org.scalatest" %% "scalatest" % "3.1.2" % Test,
-    "org.scalatestplus" %% "scalacheck-1-14" % "3.1.1.1" % Test
+    "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % Test
   )
 
 )
