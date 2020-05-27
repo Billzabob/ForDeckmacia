@@ -1,5 +1,7 @@
 package fordeckmacia
 
+import cats.implicits._
+
 // Probably a really inefficient and awful way to do this but it works for now :)
 // Scodec currently only supports Base64 and Base58 but will support Base32 in a future release
 object Base32 {
@@ -11,15 +13,14 @@ object Base32 {
 
   def encode(bytes: List[Byte]): String = {
     val binaryString = bytes
-      .map(
+      .foldMap(
         _.toInt.toBinaryString
           .takeRight(8)
           .reverse
-          .padTo(8, "0")
+          .padTo(8, '0')
           .reverse
           .mkString
       )
-      .foldLeft("")(_ + _)
 
     binaryString
       .padTo(binaryString.length + 5 - (binaryString.length % 5), "0")
@@ -27,20 +28,15 @@ object Base32 {
       .grouped(5)
       .map(Integer.parseInt(_, 2))
       .map(bytesToChars(_))
-      .foldLeft("")(_ + _)
+      .toList
+      .foldMap(_.toString)
   }
 
   def decode(plainText: String): Option[List[Byte]] = {
-    plainText.toUpperCase
-      .map(charsToBytes.get)
-      .foldRight(Option(List.empty[Int])) {
-        case (Some(byte), Some(bytes)) => Some(byte :: bytes)
-        case (_, None)                 => None
-        case (None, _)                 => None
-      }
+    plainText.toUpperCase.toList
+      .traverse(charsToBytes.get)
       .map(
-        _.map(_.toBinaryString.reverse.padTo(5, "0").reverse.mkString)
-          .foldLeft("")(_ + _)
+        _.foldMap(_.toBinaryString.reverse.padTo(5, "0").reverse.mkString)
           .dropRight((plainText.length * 5) - (((plainText.length * 5) / 8) * 8))
           .grouped(8)
           .toList

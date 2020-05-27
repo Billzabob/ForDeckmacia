@@ -44,7 +44,7 @@ object Deck {
           cardsOf1 <- encodeCardCount(deck, 1)
         } yield prefix ++ cardsOf3 ++ cardsOf2 ++ cardsOf1
 
-      def sizeBound = SizeBound.atLeast(32)
+      val sizeBound = SizeBound.atLeast(32)
 
       private def encodeCardCount(deck: Deck, cardCount: Int) = {
         val cardsOfN = deck.cards.groupBy(card => card).filter(_._2.size == cardCount).keySet.groupBy(card => SetFactionPair(card.set, card.faction)).toList
