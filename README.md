@@ -22,34 +22,34 @@ import fordeckmacia._
 val deckcode = "CEBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIAA"
 
 val deck = Deck.decode(deckcode)
-// deck: Option[Deck] = Some(
+// deck: scodec.Attempt[Deck] = Successful(
 //   Deck(
 //     List(
-//       Card(1, Noxus, 7),
-//       Card(1, Noxus, 7),
-//       Card(1, Noxus, 7),
-//       Card(1, Noxus, 12),
-//       Card(1, Noxus, 12),
-//       Card(1, Noxus, 12),
+//       Card(1, PiltoverAndZaun, 17),
+//       Card(1, PiltoverAndZaun, 17),
+//       Card(1, PiltoverAndZaun, 17),
+//       Card(1, PiltoverAndZaun, 39),
+//       Card(1, PiltoverAndZaun, 39),
+//       Card(1, PiltoverAndZaun, 39),
 //       ...
 //     )
-//   )
+//   )  
 
 val cardCodes = deck.map(_.cards.map(_.code))
-// cardCodes: Option[List[String]] = Some(
+// cardCodes: scodec.Attempt[List[String]] = Successful(
 //   List(
-//     "01NX007",
-//     "01NX007",
-//     "01NX007",
-//     "01NX012",
-//     "01NX012",
-//     "01NX012",
+//     "01PZ017",
+//     "01PZ017",
+//     "01PZ017",
+//     "01PZ039",
+//     "01PZ039",
+//     "01PZ039",
 //     ...
 //   )
 // )
 
-val encoded = deck.map(_.encode)
-// encoded: Option[String] = Some("CEBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIAA")
+val encoded = deck.flatMap(_.encode)
+// encoded: scodec.Attempt[String] = Successful("CIBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIAA")
 ```
 
 <img src="https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/ForDeckmacia.png" height="300px"/>
