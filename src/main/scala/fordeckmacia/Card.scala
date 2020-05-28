@@ -1,9 +1,9 @@
 package fordeckmacia
 
+import cats.data.NonEmptyList
 import cats.implicits._
-import scodec.{Attempt, Decoder, Err}
-import scodec.codecs.vintL
-import scodec.interop.cats._
+import scodec.{Attempt, Codec, Err}
+import scodec.codecs._
 
 case class Card(set: Int, faction: Faction, cardNumber: Int) {
   require(cardNumber < 1000 && cardNumber >= 0, "Invalid card number")
@@ -12,19 +12,25 @@ case class Card(set: Int, faction: Faction, cardNumber: Int) {
 }
 
 object Card {
-  def decoder(cardCount: Int): Decoder[List[Card]] =
-    for {
-      setFactionWith <- varIntDecoder
-      cardsWith3     <- decodeFaction.replicateA(setFactionWith)
-    } yield cardsWith3.flatten.flatMap(card => List.fill(cardCount)(card))
 
-  private val varIntDecoder = vintL.asDecoder
+  def codec: Codec[List[Card]] = {
+    listOfN(vintL, factionCodec).xmapc(_.flatMap(_.toList))(_.groupByNel(card => (card.set, card.faction.int)).values.toList.sortBy(_.size))
+  }
 
-  private val decodeFaction: Decoder[List[Card]] = for {
-    count       <- varIntDecoder
-    set         <- varIntDecoder
-    factionInt  <- varIntDecoder
-    faction     <- Decoder.liftAttempt(Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number: $factionInt")))
-    cardNumbers <- varIntDecoder.replicateA(count)
-  } yield cardNumbers.map(cardNumber => Card(set, faction, cardNumber))
+  private val factionCodec: Codec[NonEmptyList[Card]] = {
+    vintL.consume { count =>
+      (vintL ~ vintL ~ nelOfN(count, vintL)).narrowc {
+        case set ~ factionInt ~ cardNumbers =>
+          val faction = Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt"))
+          faction.map(faction => cardNumbers.map(cardNumber => Card(set, faction, cardNumber)))
+      }(cards => cards.head.set ~ cards.head.faction.int ~ cards.sortBy(_.cardNumber).map(_.cardNumber))
+    }(_.size)
+  }
+
+  private def nelOfN[A](count: Int, codec: Codec[A]): Codec[NonEmptyList[A]] =
+    (codec ~ listOfN(provide(count - 1), codec)).xmapc {
+      case (h, t) => NonEmptyList(h, t)
+    } {
+      case NonEmptyList(h, t) => (h, t)
+    }
 }
