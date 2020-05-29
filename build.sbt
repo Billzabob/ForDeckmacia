@@ -2,6 +2,16 @@ lazy val core = project
   .in(file("."))
   .settings(commonSettings, releaseSettings)
 
+lazy val docs = project
+  .in(file("myproject-docs"))
+  .settings(
+    commonSettings,
+    mdocIn := file("docs/README.md"),
+    mdocOut := file("README.md")
+  )
+  .dependsOn(core)
+  .enablePlugins(MdocPlugin)
+
 lazy val commonSettings = Seq(
   name := "fordeckmacia",
   organization := "com.github",
@@ -14,7 +24,6 @@ lazy val commonSettings = Seq(
     "org.scalatest" %% "scalatest" % "3.1.2" % Test,
     "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % Test
   )
-
 )
 
 lazy val releaseSettings = Seq(
