@@ -22,8 +22,11 @@ object Base32 {
           .mkString
       )
 
+    val remaining = binaryString.length % 5
+    val padding   = if (remaining == 0) 0 else 5 - remaining
+
     binaryString
-      .padTo(binaryString.length + 5 - (binaryString.length % 5), "0")
+      .padTo(binaryString.length + padding, "0")
       .mkString
       .grouped(5)
       .map(Integer.parseInt(_, 2))

@@ -2,6 +2,7 @@ package fordeckmacia
 
 import cats.data.NonEmptyList
 import cats.implicits._
+import scala.util.Try
 import scodec.{Attempt, Codec, Err}
 import scodec.codecs._
 
@@ -12,6 +13,13 @@ case class Card(set: Int, faction: Faction, cardNumber: Int) {
 }
 
 object Card {
+
+  def fromCode(code: String): Option[Card] =
+    for {
+      set     <- Try(code.take(2).toInt).toOption
+      faction <- Faction.fromId(code.drop(2).take(2))
+      number  <- Try(code.drop(4).take(3).toInt).toOption
+    } yield Card(set, faction, number)
 
   def codec: Codec[List[Card]] = {
     listOfN(vintL, factionCodec).xmapc(_.flatMap(_.toList))(_.groupByNel(card => (card.set, card.faction.int)).values.toList.sortBy(_.size))

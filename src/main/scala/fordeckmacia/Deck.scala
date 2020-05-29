@@ -12,11 +12,11 @@ case class Deck(cards: List[Card]) {
 
   override def equals(a: Any) =
     a match {
-      case Deck(otherCards) => cards.sortBy(_.code) == otherCards.sortBy(_.code)
-      case _                => false
+      case d: Deck => encode == d.encode
+      case _       => false
     }
 
-  override def hashCode = cards.sortBy(_.code).hashCode
+  override def hashCode = encode.hashCode
 }
 
 object Deck {
@@ -36,9 +36,9 @@ object Deck {
       Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).as(Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: cardsOf1))
   }(deck => prefix ~ cardsOf(deck.cards, 3)(_.code) ~ cardsOf(deck.cards, 2)(_.code) ~ cardsOf(deck.cards, 1)(_.code))
 
-  def duplicate[A](list: List[A], count: Int): List[A] = list.flatMap(a => List.fill(count)(a))
+  private def duplicate[A](list: List[A], count: Int): List[A] = list.flatMap(a => List.fill(count)(a))
 
-  def cardsOf[A, B: cats.Order](list: List[A], count: Int)(f: A => B) =
+  private def cardsOf[A, B: cats.Order](list: List[A], count: Int)(f: A => B): List[A] =
     list.groupByNel(f).values.filter(_.size == count).toList.map(_.head)
 
   private def checkVersion(byte: Byte): Boolean = {

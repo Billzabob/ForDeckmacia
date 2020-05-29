@@ -16,5 +16,6 @@ object Faction {
 
   val allFactions = List(Demacia, Freljord, Ionia, Noxus, PiltoverAndZaun, ShadowIsles, Bilgewater)
 
-  def fromInt(int: Int): Option[Faction] = allFactions.find(_.int == int)
+  def fromInt(int: Int): Option[Faction]  = allFactions.find(_.int == int)
+  def fromId(id: String): Option[Faction] = allFactions.find(_.id == id)
 }

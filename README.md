@@ -19,7 +19,7 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckcode = "CEBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIAA"
+val deckcode = "CIBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIA"
 
 val deck = Deck.decode(deckcode)
 // deck: scodec.Attempt[Deck] = Successful(
@@ -49,7 +49,7 @@ val cardCodes = deck.map(_.cards.map(_.code))
 // )
 
 val encoded = deck.flatMap(_.encode)
-// encoded: scodec.Attempt[String] = Successful("CIBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIAA")
+// encoded: scodec.Attempt[String] = Successful("CIBAKAIECETSQNBWA4AQGBYMB4PCKKBXAIAQCBA4AEAQGGIA")
 ```
 
 <img src="https://github.com/Billzabob/ForDeckmacia/blob/master/src/main/resources/ForDeckmacia.png" height="300px"/>
