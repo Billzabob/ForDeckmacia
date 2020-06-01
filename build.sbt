@@ -16,10 +16,12 @@ lazy val commonSettings = Seq(
   name := "fordeckmacia",
   organization := "com.github",
   scalaVersion := "2.13.2",
-  crossScalaVersions := List(scalaVersion.value, "2.12.11"),
+  crossScalaVersions := List(scalaVersion.value, "2.12.11", "2.11.12"),
   libraryDependencies ++= Seq(
-    "org.scodec" %% "scodec-core" % "1.11.7",
-    "org.scodec" %% "scodec-cats" % "1.0.0",
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n <= 11 => "org.scodec" %% "scodec-core" % "1.11.4"
+      case _                       => "org.scodec" %% "scodec-core" % "1.11.7"
+    },
     "org.scalacheck" %% "scalacheck" % "1.14.3" % Test,
     "org.scalatest" %% "scalatest" % "3.1.2" % Test,
     "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % Test

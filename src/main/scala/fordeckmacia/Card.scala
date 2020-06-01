@@ -1,7 +1,5 @@
 package fordeckmacia
 
-import cats.data.NonEmptyList
-import cats.implicits._
 import scala.util.Try
 import scodec.{Attempt, Codec, Err}
 import scodec.codecs._
@@ -21,24 +19,17 @@ object Card {
       number  <- Try(code.drop(4).take(3).toInt).toOption
     } yield Card(set, faction, number)
 
-  def codec: Codec[List[Card]] = {
-    listOfN(vintL, factionCodec).xmapc(_.flatMap(_.toList))(_.groupByNel(card => (card.set, card.faction.int)).values.toList.sortBy(_.size))
-  }
+  def codec: Codec[List[Card]] =
+    listOfN(vintL, factionCodec).xmapc(_.flatMap(_.toList)) { cards =>
+      cards.groupBy(card => (card.set, card.faction.int)).values.toList.sortBy(_.head.cardNumber).sortBy(_.size)
+    }
 
-  private val factionCodec: Codec[NonEmptyList[Card]] = {
+  private val factionCodec: Codec[List[Card]] =
     vintL.consume { count =>
-      (vintL ~ vintL ~ nelOfN(count, vintL)).narrowc {
+      (vintL ~ vintL ~ listOfN(provide(count), vintL)).narrowc {
         case set ~ factionInt ~ cardNumbers =>
           val faction = Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt"))
           faction.map(faction => cardNumbers.map(cardNumber => Card(set, faction, cardNumber)))
       }(cards => cards.head.set ~ cards.head.faction.int ~ cards.sortBy(_.cardNumber).map(_.cardNumber))
     }(_.size)
-  }
-
-  private def nelOfN[A](count: Int, codec: Codec[A]): Codec[NonEmptyList[A]] =
-    (codec ~ listOfN(provide(count - 1), codec)).xmapc {
-      case (h, t) => NonEmptyList(h, t)
-    } {
-      case NonEmptyList(h, t) => (h, t)
-    }
 }

@@ -1,9 +1,7 @@
 package fordeckmacia
 
-import cats.implicits._
 import scodec.{Attempt, Codec}
 import scodec.codecs._
-import scodec.interop.cats._
 
 case class Deck(cards: List[Card]) {
 
@@ -32,13 +30,13 @@ object Deck {
 
   val codec: Codec[Deck] = (byte ~ Card.codec ~ Card.codec ~ Card.codec).narrowc {
     case prefix ~ cardsOf3 ~ cardsOf2 ~ cardsOf1 =>
-      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).as(Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: cardsOf1))
+      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).map(_ => Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: cardsOf1))
   }(deck => prefix ~ cardsOf(deck.cards, 3)(_.code) ~ cardsOf(deck.cards, 2)(_.code) ~ cardsOf(deck.cards, 1)(_.code))
 
   private def duplicate[A](list: List[A], count: Int): List[A] = list.flatMap(a => List.fill(count)(a))
 
-  private def cardsOf[A, B: cats.Order](list: List[A], count: Int)(f: A => B): List[A] =
-    list.groupByNel(f).values.filter(_.size == count).toList.map(_.head)
+  private def cardsOf[A, B](list: List[A], count: Int)(f: A => B): List[A] =
+    list.groupBy(f).values.filter(_.size == count).toList.map(_.head)
 
   private def checkVersion(byte: Byte): Boolean = {
     val format  = (byte & 0xf0) >> 4

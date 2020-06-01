@@ -1,6 +1,5 @@
 package fordeckmacia
 
-import cats.implicits._
 import org.scalacheck.Gen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -90,13 +89,13 @@ class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyCh
   private def verifyDeck(resource: String) = {
     val deck = readDeckFromResource(resource)
     Deck.decode(deck.code).map(_.cards.map(_.code).sorted) shouldBe Attempt.successful(deck.cardCodes.sorted)
-    deck.cardCodes.traverse(Card.fromCode).map(Deck.apply).map(_.encode) shouldBe Some(Attempt.successful(deck.code))
+    Deck(deck.cardCodes.flatMap(Card.fromCode)).encode shouldBe Attempt.successful(deck.code)
   }
 
   case class DeckAndCode(code: String, cardCodes: List[String])
 
   private def readDeckFromResource(resource: String): DeckAndCode = {
-    val lines = Source.fromResource(resource).getLines.toList
+    val lines = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(resource)).getLines.toList
     DeckAndCode(lines.head, lines.tail.filterNot(_.isEmpty))
   }
 }
