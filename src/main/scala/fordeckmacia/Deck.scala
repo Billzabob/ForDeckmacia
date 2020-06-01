@@ -1,8 +1,7 @@
 package fordeckmacia
 
 import cats.implicits._
-import scodec.{Attempt, Codec, Err}
-import scodec.bits.BitVector
+import scodec.{Attempt, Codec}
 import scodec.codecs._
 import scodec.interop.cats._
 
@@ -21,10 +20,10 @@ case class Deck(cards: List[Card]) {
 
 object Deck {
   def decode(code: String): Attempt[Deck] =
-    Attempt.fromOption(Base32.decode(code), Err("Not valid Base32")).flatMap(bytes => codec.complete.decodeValue(BitVector(bytes)))
+    Base32.decode(code).map(_.bits).flatMap(codec.complete.decodeValue)
 
   def encode(deck: Deck): Attempt[String] =
-    codec.encode(deck).map(bits => Base32.encode(bits.toByteArray.toList))
+    codec.encode(deck).map(Base32.encode)
 
   val supportedFormat     = 1
   val maxSupportedVersion = 2
