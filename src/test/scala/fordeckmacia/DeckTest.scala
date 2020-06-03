@@ -75,17 +75,6 @@ class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyCh
     verifyDeck("deck2.txt")
   }
 
-  "decks" should "be equal if order is different" in {
-    val card1 = Card(1, Faction.Bilgewater, 1)
-    val card2 = Card(1, Faction.Demacia, 1)
-    val deck1 = Deck(List(card1, card2))
-    val deck2 = Deck(List(card2, card1))
-
-    deck1 shouldBe deck2
-    deck1.hashCode shouldBe deck2.hashCode
-    deck1 should not be card1
-  }
-
   private def verifyDeck(resource: String) = {
     val deck = readDeckFromResource(resource)
     Deck.decode(deck.code).map(_.cards.map(_.code).sorted) shouldBe Attempt.successful(deck.cardCodes.sorted)

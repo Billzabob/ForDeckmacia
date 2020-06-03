@@ -15,21 +15,22 @@ object Card {
   def fromCode(code: String): Option[Card] =
     for {
       set     <- Try(code.take(2).toInt).toOption
-      faction <- Faction.fromId(code.drop(2).take(2))
-      number  <- Try(code.drop(4).take(3).toInt).toOption
+      faction <- Faction.fromId(code.slice(2, 4))
+      number  <- Try(code.slice(4, 7).toInt).toOption
     } yield Card(set, faction, number)
 
-  def codec: Codec[List[Card]] =
-    listOfN(vintL, factionCodec).xmapc(_.flatMap(_.toList)) { cards =>
+  def codec: Codec[Set[Card]] = {
+    listOfN(vintL, factionCodec).xmapc(_.toSet.flatten) { cards =>
       cards.groupBy(card => (card.set, card.faction.int)).values.toList.sortBy(_.head.cardNumber).sortBy(_.size)
     }
+  }
 
-  private val factionCodec: Codec[List[Card]] =
+  private val factionCodec: Codec[Set[Card]] =
     vintL.consume { count =>
       (vintL ~ vintL ~ listOfN(provide(count), vintL)).narrowc {
         case set ~ factionInt ~ cardNumbers =>
           val faction = Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt"))
-          faction.map(faction => cardNumbers.map(cardNumber => Card(set, faction, cardNumber)))
-      }(cards => cards.head.set ~ cards.head.faction.int ~ cards.sortBy(_.cardNumber).map(_.cardNumber))
+          faction.map(faction => cardNumbers.toSet[Int].map(cardNumber => Card(set, faction, cardNumber)))
+      }(cards => cards.head.set ~ cards.head.faction.int ~ cards.toList.sortBy(_.cardNumber).map(_.cardNumber))
     }(_.size)
 }

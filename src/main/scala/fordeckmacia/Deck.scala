@@ -30,13 +30,12 @@ object Deck {
 
   val codec: Codec[Deck] = (byte ~ Card.codec ~ Card.codec ~ Card.codec).narrowc {
     case prefix ~ cardsOf3 ~ cardsOf2 ~ cardsOf1 =>
-      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).map(_ => Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: cardsOf1))
-  }(deck => prefix ~ cardsOf(deck.cards, 3)(_.code) ~ cardsOf(deck.cards, 2)(_.code) ~ cardsOf(deck.cards, 1)(_.code))
-
-  private def duplicate[A](list: List[A], count: Int): List[A] = list.flatMap(a => List.fill(count)(a))
-
-  private def cardsOf[A, B](list: List[A], count: Int)(f: A => B): List[A] =
-    list.groupBy(f).values.filter(_.size == count).toList.map(_.head)
+      def duplicate[A](set: Set[A], count: Int) = set.toList.flatMap(a => List.fill(count)(a))
+      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).map(_ => Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: duplicate(cardsOf1, 1)))
+  } { deck =>
+    def cardsOf[A, B](list: List[A], count: Int)(f: A => B) = list.groupBy(f).values.filter(_.size == count).toList.map(_.head).toSet
+    prefix ~ cardsOf(deck.cards, 3)(_.code) ~ cardsOf(deck.cards, 2)(_.code) ~ cardsOf(deck.cards, 1)(_.code)
+  }
 
   private def checkVersion(byte: Byte): Boolean = {
     val format  = (byte & 0xf0) >> 4
