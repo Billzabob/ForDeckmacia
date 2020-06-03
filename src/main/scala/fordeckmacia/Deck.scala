@@ -3,17 +3,15 @@ package fordeckmacia
 import scodec.{Attempt, Codec}
 import scodec.codecs._
 
-case class Deck(cards: List[Card]) {
+case class Deck(cards: Map[Card, Int]) {
 
   def encode: Attempt[String] = Deck.encode(this)
 
-  override def equals(a: Any) =
-    a match {
-      case d: Deck => encode == d.encode
-      case _       => false
-    }
+  def cardList: List[Card]    = cards.toList.flatMap { case (card, count) => List.fill(count)(card) }
+  def codeList: List[String]  = cardList.map(_.code)
+  def codes: Map[String, Int] = cards.map { case (card, count) => (card.code, count) }
 
-  override def hashCode = encode.hashCode
+  def cardCountsValid: Boolean = cards.values.forall((0 to 3).contains)
 }
 
 object Deck {
@@ -23,18 +21,23 @@ object Deck {
   def encode(deck: Deck): Attempt[String] =
     codec.encode(deck).map(Base32.encode)
 
+  def fromCards(cards: List[Card]): Deck =
+    Deck(cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) })
+
   val supportedFormat     = 1
   val maxSupportedVersion = 2
 
   private val prefix = (supportedFormat << 4 | maxSupportedVersion).toByte
 
-  val codec: Codec[Deck] = (byte ~ Card.codec ~ Card.codec ~ Card.codec).narrowc {
+  val codec: Codec[Deck] = (byte ~ Card.codec ~ Card.codec ~ Card.codec).exmapc {
     case prefix ~ cardsOf3 ~ cardsOf2 ~ cardsOf1 =>
-      def duplicate[A](set: Set[A], count: Int) = set.toList.flatMap(a => List.fill(count)(a))
-      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).map(_ => Deck(duplicate(cardsOf3, 3) ::: duplicate(cardsOf2, 2) ::: duplicate(cardsOf1, 1)))
+      def toMap[A](set: Set[A], count: Int) = set.map(_ -> count).toMap
+      Attempt.guard(checkVersion(prefix), unsupportedVersion(prefix)).map(_ => Deck(toMap(cardsOf3, 3) ++ toMap(cardsOf2, 2) ++ toMap(cardsOf1, 1)))
   } { deck =>
-    def cardsOf[A, B](list: List[A], count: Int)(f: A => B) = list.groupBy(f).values.filter(_.size == count).toList.map(_.head).toSet
-    prefix ~ cardsOf(deck.cards, 3)(_.code) ~ cardsOf(deck.cards, 2)(_.code) ~ cardsOf(deck.cards, 1)(_.code)
+    def cardsOfCount[A](map: Map[A, Int], count: Int) = map.filter(_._2 == count).keySet
+    Attempt
+      .guard(deck.cardCountsValid, "Can't encode deck with invalid card counts")
+      .map(_ => prefix ~ cardsOfCount(deck.cards, 3) ~ cardsOfCount(deck.cards, 2) ~ cardsOfCount(deck.cards, 1))
   }
 
   private def checkVersion(byte: Byte): Boolean = {

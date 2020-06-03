@@ -19,11 +19,11 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala mdoc
 import fordeckmacia._
 
-val deckcode = "CIAQEAIABQRQAAA"
+val deckcode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
 
 val deck = Deck.decode(deckcode)
 
-val cardCodes = deck.map(_.cards.map(_.code))
+val cardCodes = deck.map(_.codes)
 
 val encoded = deck.flatMap(_.encode)
 ```

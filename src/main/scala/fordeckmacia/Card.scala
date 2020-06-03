@@ -21,7 +21,7 @@ object Card {
 
   def codec: Codec[Set[Card]] = {
     listOfN(vintL, factionCodec).xmapc(_.toSet.flatten) { cards =>
-      cards.groupBy(card => (card.set, card.faction.int)).values.toList.sortBy(_.head.cardNumber).sortBy(_.size)
+      cards.groupBy(card => (card.set, card.faction.int)).toList.sortBy(_._1).reverse.sortBy(_._2.size).map(_._2)
     }
   }
 
