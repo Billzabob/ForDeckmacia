@@ -1,9 +1,7 @@
 package fordeckmacia
 
-import scodec.Attempt
-import scodec.bits.BitVector
-import scodec.Err
-import scodec.bits.ByteVector
+import scodec.{Attempt, Err}
+import scodec.bits.{BitVector, ByteVector}
 
 // Scodec currently only supports Base64 and Base58 but will support Base32 in a future release
 object Base32 {
