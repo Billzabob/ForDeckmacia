@@ -1,7 +1,7 @@
 package fordeckmacia
 
 import scala.util.Try
-import scodec.{Attempt, Codec, Err}
+import scodec.Codec
 import scodec.codecs._
 
 case class Card(set: Int, faction: Faction, cardNumber: Int) {
@@ -19,18 +19,23 @@ object Card {
       number  <- Try(code.slice(4, 7).toInt).toOption
     } yield Card(set, faction, number)
 
-  def codec: Codec[Set[Card]] = {
-    listOfN(vintL, factionCodec).xmapc(_.toSet.flatten) { cards =>
-      cards.groupBy(card => (card.set, card.faction.int)).toList.sortBy(_._1).reverse.sortBy(_._2.size).map(_._2)
-    }
-  }
+  def cardsOf1To3Codec: Codec[Set[Card]] =
+    listOfN(vintL, factionSetCardsCodec).xmap(
+      _.toSet.flatten,
+      _.groupBy(card => (card.set, card.faction.int)).toList.sortBy(_._1).reverse.sortBy(_._2.size).map(_._2)
+    )
 
-  private val factionCodec: Codec[Set[Card]] =
+  def cardsOf4PlusCodec: Codec[Map[Card, Int]] =
+    list(vint ~ vintL ~ Faction.codec ~ vintL).xmap(
+      _.map { case count ~ set ~ faction ~ cardNumber => Card(set, faction, cardNumber) -> count }.toMap,
+      _.toList.sortBy(_._1.code).map { case (card, count) => count ~ card.set ~ card.faction ~ card.cardNumber }
+    )
+
+  private val factionSetCardsCodec: Codec[Set[Card]] =
     vintL.consume { count =>
-      (vintL ~ vintL ~ listOfN(provide(count), vintL)).narrowc {
-        case set ~ factionInt ~ cardNumbers =>
-          val faction = Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt"))
-          faction.map(faction => cardNumbers.toSet[Int].map(cardNumber => Card(set, faction, cardNumber)))
-      }(cards => cards.head.set ~ cards.head.faction.int ~ cards.toList.sortBy(_.cardNumber).map(_.cardNumber))
+      (vintL ~ Faction.codec ~ listOfN(provide(count), vintL)).xmapc {
+        case set ~ faction ~ cardNumbers =>
+          cardNumbers.toSet[Int].map(cardNumber => Card(set, faction, cardNumber))
+      }(cards => cards.head.set ~ cards.head.faction ~ cards.toList.sortBy(_.cardNumber).map(_.cardNumber))
     }(_.size)
 }

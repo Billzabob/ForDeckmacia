@@ -25,48 +25,48 @@ val deckcode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRW
 val deck = Deck.decode(deckcode)
 // deck: scodec.Attempt[Deck] = Successful(
 //   Deck(
-//     Map(
-//       Card(2, Bilgewater, 29) -> 3,
-//       Card(1, ShadowIsles, 54) -> 2,
-//       Card(1, ShadowIsles, 43) -> 1,
-//       Card(2, Bilgewater, 37) -> 2,
+//     HashMap(
 //       Card(1, ShadowIsles, 52) -> 1,
-//       Card(2, Bilgewater, 53) -> 3,
-//       Card(2, Bilgewater, 39) -> 3,
-//       Card(1, ShadowIsles, 40) -> 3,
-//       Card(2, Bilgewater, 54) -> 1,
-//       Card(2, Bilgewater, 47) -> 3,
 //       Card(2, ShadowIsles, 7) -> 2,
-//       Card(2, ShadowIsles, 3) -> 1,
-//       Card(2, Bilgewater, 44) -> 2,
 //       Card(2, Bilgewater, 56) -> 3,
-//       Card(2, ShadowIsles, 8) -> 2,
+//       Card(1, ShadowIsles, 54) -> 2,
+//       Card(1, ShadowIsles, 40) -> 3,
+//       Card(2, Bilgewater, 37) -> 2,
+//       Card(2, Bilgewater, 39) -> 3,
+//       Card(2, Bilgewater, 44) -> 2,
+//       Card(1, ShadowIsles, 25) -> 2,
+//       Card(1, ShadowIsles, 43) -> 1,
+//       Card(2, Bilgewater, 53) -> 3,
 //       Card(1, ShadowIsles, 29) -> 3,
+//       Card(2, ShadowIsles, 8) -> 2,
+//       Card(2, ShadowIsles, 3) -> 1,
 //       Card(2, ShadowIsles, 10) -> 3,
-//       Card(1, ShadowIsles, 25) -> 2
+//       Card(2, Bilgewater, 29) -> 3,
+//       Card(2, Bilgewater, 47) -> 3,
+//       Card(2, Bilgewater, 54) -> 1
 //     )
 //   )
 // )
 
 val cardCodes = deck.map(_.codes)
 // cardCodes: scodec.Attempt[Map[String, Int]] = Successful(
-//   Map(
+//   HashMap(
 //     "02BW044" -> 2,
 //     "02BW029" -> 3,
 //     "01SI054" -> 2,
 //     "02BW056" -> 3,
 //     "01SI043" -> 1,
-//     "02SI008" -> 2,
-//     "02BW037" -> 2,
 //     "02BW054" -> 1,
 //     "01SI025" -> 2,
 //     "01SI040" -> 3,
 //     "02BW053" -> 3,
 //     "02BW047" -> 3,
-//     "01SI052" -> 1,
-//     "02SI007" -> 2,
 //     "01SI029" -> 3,
 //     "02SI010" -> 3,
+//     "02SI008" -> 2,
+//     "02BW037" -> 2,
+//     "01SI052" -> 1,
+//     "02SI007" -> 2,
 //     "02BW039" -> 3,
 //     "02SI003" -> 1
 //   )
