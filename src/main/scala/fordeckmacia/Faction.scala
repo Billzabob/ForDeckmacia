@@ -22,6 +22,6 @@ object Faction {
   def fromInt(int: Int): Option[Faction]  = allFactions.find(_.int == int)
   def fromId(id: String): Option[Faction] = allFactions.find(_.id == id)
 
-  val codec: Codec[Faction] =
+  private[fordeckmacia] val codec: Codec[Faction] =
     vintL.narrow(factionInt => Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt")), _.int)
 }
