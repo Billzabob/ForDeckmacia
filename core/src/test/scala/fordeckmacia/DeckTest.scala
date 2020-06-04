@@ -4,7 +4,6 @@ import org.scalacheck.Gen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import scala.io.Source
 import scala.util.Random
 import scodec.Attempt
 
@@ -66,9 +65,9 @@ class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyCh
   }
 
   it should "work for decks" in {
-    verifyDeck("deck1.txt")
-    verifyDeck("deck2.txt")
-    verifyDeck("deckWith4PlusDuplicates.txt")
+    verifyDeck(deck1)
+    verifyDeck(deck2)
+    verifyDeck(deck3)
   }
 
   it should "generate the same codes as the game" in {
@@ -99,16 +98,115 @@ class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyCh
     }
   }
 
-  private def verifyDeck(resource: String) = {
-    val deck = readDeckFromResource(resource)
+  private def verifyDeck(deckString: String) = {
+    val deck = parseDeck(deckString)
     Deck.decode(deck.code).map(_.codeList.sorted) shouldBe Attempt.successful(deck.cardCodes.sorted)
     Deck.fromCards(deck.cardCodes.flatMap(Card.fromCode)).encode shouldBe Attempt.successful(deck.code)
   }
 
   case class DeckAndCode(code: String, cardCodes: List[String])
 
-  private def readDeckFromResource(resource: String): DeckAndCode = {
-    val lines = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(resource)).getLines.toList
+  private def parseDeck(deck: String): DeckAndCode = {
+    val lines = deck.linesIterator.toList.map(_.trim)
     DeckAndCode(lines.head, lines.tail.filterNot(_.isEmpty))
   }
+
+  private val deck1 =
+    """CIBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
+    01PZ008
+    01PZ008
+    01PZ008
+    01NX040
+    01NX040
+    01NX040
+    01NX015
+    01NX015
+    01NX015
+    01NX037
+    01NX037
+    01NX037
+    01NX030
+    01NX030
+    01NX030
+    01PZ054
+    01PZ054
+    01PZ054
+    02NX004
+    02NX004
+    02NX004
+    01PZ017
+    01PZ017
+    01PZ017
+    01NX047
+    01NX047
+    01NX047
+    01PZ052
+    01PZ052
+    01PZ052
+    01PZ039
+    01PZ039
+    02NX003
+    02NX003
+    02NX003
+    01PZ031
+    01PZ031
+    01NX002
+    01NX002
+    01NX002"""
+
+  private val deck2 =
+    """CIBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
+    01SI053
+    01SI053
+    01SI053
+    02PZ008
+    02PZ008
+    02PZ008
+    01SI043
+    01SI043
+    01SI056
+    01SI056
+    01PZ048
+    01PZ048
+    01SI033
+    01SI033
+    01SI033
+    01PZ027
+    01PZ027
+    01PZ027
+    01SI049
+    01SI049
+    01SI040
+    01SI040
+    01SI040
+    01PZ052
+    01PZ052
+    01PZ052
+    01PZ031
+    01PZ031
+    02PZ006
+    02PZ006
+    01SI054
+    01SI054
+    01SI054
+    01SI029
+    01SI029
+    01SI029
+    01SI025
+    01SI001
+    01SI001
+    01SI015"""
+
+  val deck3 =
+    """CIAAAAAKAECTK
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053
+    01SI053"""
 }
