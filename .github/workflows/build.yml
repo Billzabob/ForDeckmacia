@@ -14,7 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run tests
-      run: sbt clean coverage +test coverageReport
+      run: sbt clean +test
+    - name: Generate code coverage
+      run: sbt 'project coreJVM' clean coverage test coverageReport
     - name: Check formatting
       run: sbt scalafmtCheckAll
     - name: Upload coverage
