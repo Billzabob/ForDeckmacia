@@ -5,8 +5,12 @@ lazy val fordeckmacia = project.in(file("."))
 lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("core"))
-  .settings(commonSettings, releaseSettings)
-  .settings(name := "fordeckmacia")
+  .settings(
+    commonSettings,
+    releaseSettings,
+    name := "fordeckmacia",
+    crossScalaVersions := List(scalaVersion.value, "2.12.11"),
+  )
 
 lazy val docs = project
   .in(file("fordeckmacia-docs"))
@@ -22,9 +26,9 @@ lazy val docs = project
 lazy val commonSettings = Seq(
   organization := "com.github",
   scalaVersion := "2.13.2",
-  crossScalaVersions := List(scalaVersion.value, "2.12.11"),
   libraryDependencies ++= Seq(
     "org.scodec"        %%% "scodec-core"     % "1.11.7",
+    "org.scodec"        %%% "scodec-bits"     % "1.1.15",
     "org.scalacheck"    %%% "scalacheck"      % "1.14.3"  % Test,
     "org.scalatest"     %%% "scalatest"       % "3.1.2"   % Test,
     "org.scalatestplus" %%% "scalacheck-1-14" % "3.1.2.0" % Test

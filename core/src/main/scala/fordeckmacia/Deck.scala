@@ -1,6 +1,7 @@
 package fordeckmacia
 
 import scodec.{Attempt, Codec, Err}
+import scodec.bits.BitVector
 import scodec.codecs._
 
 case class Deck(cards: Map[Card, Int]) {
@@ -14,10 +15,10 @@ case class Deck(cards: Map[Card, Int]) {
 
 object Deck {
   def decode(code: String): Attempt[Deck] =
-    Base32.decode(code).map(_.bits).flatMap(codec.complete.decodeValue)
+    Attempt.fromEither(BitVector.fromBase32Descriptive(code).left.map(Err.apply)).flatMap(codec.complete.decodeValue)
 
   def encode(deck: Deck): Attempt[String] =
-    codec.encode(deck).map(Base32.encode)
+    codec.encode(deck).map(_.toBase32.takeWhile(_ != '='))
 
   def fromCards(cards: List[Card]): Deck =
     Deck(cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) })
