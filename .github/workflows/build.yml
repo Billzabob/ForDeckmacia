@@ -1,23 +1,25 @@
 name: build
-
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        scala:
+          - 2.12.11
+          - 2.13.2
+        scalajs:
+          # -1.1.0
+          -0.6.33
     steps:
     - uses: actions/checkout@v2
     - name: Run tests
-      run: sbt clean +test
-    - name: Generate code coverage
-      run: sbt 'project coreJVM' clean coverage test coverageReport
+      run: sbt ++${{matrix.scala}} clean test
+      env: SCALAJS_VERSION: $${{matrix.scalajs}}
     - name: Check formatting
-      run: sbt scalafmtCheckAll
-    - name: Upload coverage
-      uses: codecov/codecov-action@v1
+      if: matrix.scala == '2.13.2'
+      run: sbt ++${{matrix.scala}} scalafmtCheckAll

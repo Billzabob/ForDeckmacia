@@ -1,3 +1,5 @@
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+
 lazy val fordeckmacia = project.in(file("."))
   .settings(commonSettings, releaseSettings, publish / skip := true)
   .aggregate(core.jvm, core.js)
