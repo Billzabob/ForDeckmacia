@@ -6,6 +6,15 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scala:
+          - 2.12.11
+          - 2.13.2
+        scalajs:
+          # - 1.1.0
+          - 0.6.33
+          - null
     steps:
       - uses: actions/checkout@v1
       - uses: olafurpg/setup-gpg@v2
@@ -16,3 +25,4 @@ jobs:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SCALAJS_VERSION: $${{matrix.scalajs}}

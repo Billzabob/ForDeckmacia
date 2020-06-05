@@ -4,6 +4,8 @@ lazy val fordeckmacia = project.in(file("."))
   .settings(commonSettings, releaseSettings, publish / skip := true)
   .aggregate(core.jvm, core.js)
 
+val customScalaJSVersion = Option(System.getenv("SCALAJS_VERSION"))
+
 lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("core"))
@@ -12,6 +14,9 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     releaseSettings,
     name := "fordeckmacia",
     crossScalaVersions := List(scalaVersion.value, "2.12.11"),
+  )
+  .jvmSettings(
+    publish / skip := customScalaJSVersion.isDefined
   )
 
 lazy val docs = project
