@@ -19,7 +19,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run tests
       run: sbt ++${{matrix.scala}} clean test
-      env: SCALAJS_VERSION: $${{matrix.scalajs}}
+      env:
+        SCALAJS_VERSION: $${{matrix.scalajs}}
     - name: Check formatting
       if: matrix.scala == '2.13.2'
       run: sbt ++${{matrix.scala}} scalafmtCheckAll
