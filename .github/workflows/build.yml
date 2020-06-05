@@ -16,6 +16,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Check formatting
       if: matrix.scala == '2.13.2'
-      run: sbt ++${{matrix.scala}} scalafmtCheckAll
+      run: sbt ++${{ matrix.scala }} scalafmtCheckAll
     - name: Run tests
-      run: sbt ++${{matrix.scala}} clean test
+      run: sbt ++${{ matrix.scala }} clean test
