@@ -1,20 +1,19 @@
 package fordeckmacia
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import munit.FunSuite
 
-class CardTest extends AnyFlatSpec with Matchers {
-  "invalid cards" should "fail to be created" in {
-    assertThrows[IllegalArgumentException](Card(100, Faction.Bilgewater, 1))
-    assertThrows[IllegalArgumentException](Card(1, Faction.Bilgewater, 1000))
+class CardTest extends FunSuite {
+  test("invalid cards") {
+    intercept[IllegalArgumentException](Card(100, Faction.Bilgewater, 1))
+    intercept[IllegalArgumentException](Card(1, Faction.Bilgewater, 1000))
   }
 
-  "invalid card codes" should "return None when parsed" in {
-    Card.fromCode("") shouldBe None
-    Card.fromCode("1") shouldBe None
-    Card.fromCode("11N") shouldBe None
-    Card.fromCode("ABCDEFG") shouldBe None
-    Card.fromCode("11ZZ111") shouldBe None
-    Card.fromCode("11NXABC") shouldBe None
+  test("invalid card codes") {
+    assertEquals(Card.fromCode(""), None)
+    assertEquals(Card.fromCode("1"), None)
+    assertEquals(Card.fromCode("11N"), None)
+    assertEquals(Card.fromCode("ABCDEFG"), None)
+    assertEquals(Card.fromCode("11ZZ111"), None)
+    assertEquals(Card.fromCode("11NXABC"), None)
   }
 }
