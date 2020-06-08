@@ -1,15 +1,16 @@
 package fordeckmacia
 
+import munit.ScalaCheckSuite
 import org.scalacheck.Gen
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalacheck.Prop._
 import scala.util.Random
 import scodec.Attempt
 
-class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
+class DeckTest extends ScalaCheckSuite {
 
-  implicit val config = PropertyCheckConfiguration(minSuccessful = 10000)
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMinSuccessfulTests(10000)
 
   val cardGenerator: Gen[Card] =
     for {
@@ -30,78 +31,78 @@ class DeckTest extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyCh
       cards             <- Gen.listOfN(numDifferentCards, cardsGenerator)
     } yield Deck(cards.toMap)
 
-  "deck encoding/decoding" should "be idempotent" in {
+  property("idempotent deck encoding/decoding") {
     forAll(deckGenerator) { deck: Deck =>
       val encoded   = deck.encode
       val decoded   = encoded.flatMap(Deck.decode)
       val reEncoded = decoded.flatMap(_.encode)
-      decoded shouldBe Attempt.successful(deck)
-      reEncoded shouldBe encoded
+      assertEquals(decoded, Attempt.successful(deck))
+      assertEquals(reEncoded, encoded)
     }
   }
 
-  it should "not depend on card order" in {
+  property("equality doesn't depend on card order") {
     forAll(deckGenerator) { deck: Deck =>
       val encoded          = deck.encode
       val encodedScrambled = Deck.fromCards(Random.shuffle(deck.cardList)).encode
-      encodedScrambled shouldBe encoded
+      assertEquals(encodedScrambled, encoded)
     }
   }
 
-  it should "fail on unexpected version" in {
-    Deck.decode("D4AAAAA") should matchPattern { case Attempt.Failure(_) => }
+  test("fail on unexpected version") {
+    assert(clue(Deck.decode("D4AAAAA")).isFailure)
   }
 
-  it should "fail on invalid deck codes" in {
-    Deck.decode("CIAAAAI") should matchPattern { case Attempt.Failure(_) => }
+  test("fail on invalid deck codes") {
+    assert(clue(Deck.decode("CIAAAAI")).isFailure)
   }
 
-  it should "fail on unknown factions" in {
-    Deck.decode("CIAAAAIBAB7QA") should matchPattern { case Attempt.Failure(_) => }
+  test("fail on unknown factions") {
+    assert(clue(Deck.decode("CIAAAAIBAB7QA")).isFailure)
   }
 
-  it should "fail on invalid Base32" in {
-    Deck.decode("CIAAAAA01") should matchPattern { case Attempt.Failure(_) => }
+  test("fail on invalid Base32") {
+    assert(clue(Deck.decode("CIAAAAA01")).isFailure)
   }
 
-  it should "work for decks" in {
+  test("work for decks") {
     verifyDeck(deck1)
     verifyDeck(deck2)
     verifyDeck(deck3)
   }
 
-  it should "generate the same codes as the game" in {
-    def verifyCode(code: String) = Deck.decode(code).flatMap(_.encode) shouldBe Attempt.successful(code)
+  test("generate the same codes as the game") {
+    def verifyCode(code: String) = assertEquals(Deck.decode(code).flatMap(_.encode), Attempt.successful(code))
     // These codes were exported directly from the game
     verifyCode("CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA")
     verifyCode("CICACAQEBABAEAQBBECACAQCBQTDSBIBAQIBWJZUHAAQEAICEUYQA")
     verifyCode("CIAAAAH7777X6AIFGU")
   }
 
-  "deck to and from card list" should "be idempotent" in {
+  test("idempotent deck to and from card list") {
     forAll(deckGenerator) { deck: Deck =>
       val encoded   = deck.codeList.sorted
       val decoded   = Deck.fromCards(encoded.flatMap(Card.fromCode))
       val reEncoded = decoded.codeList.sorted
-      decoded shouldBe deck
-      reEncoded shouldBe encoded
+      assertEquals(decoded, deck)
+      assertEquals(reEncoded, encoded)
     }
   }
 
-  "deck to and from card codes" should "be idempotent" in {
+  test("idempotent deck to and from card codes") {
     forAll(deckGenerator) { deck: Deck =>
       val encoded   = deck.codes
       val decoded   = Deck.fromCards(encoded.toList.flatMap { case (code, count) => List.fill(count)(code) }.flatMap(Card.fromCode))
       val reEncoded = decoded.codes
-      decoded shouldBe deck
-      reEncoded shouldBe encoded
+      assertEquals(decoded, deck)
+      assertEquals(reEncoded, encoded)
     }
   }
 
   private def verifyDeck(deckString: String) = {
     val deck = parseDeck(deckString)
-    Deck.decode(deck.code).map(_.codeList.sorted) shouldBe Attempt.successful(deck.cardCodes.sorted)
-    Deck.fromCards(deck.cardCodes.flatMap(Card.fromCode)).encode shouldBe Attempt.successful(deck.code)
+    assertEquals(Deck.decode(deck.code).map(_.codeList.sorted), Attempt.successful(deck.cardCodes.sorted))
+    assertEquals(Deck.fromCards(deck.cardCodes.flatMap(Card.fromCode)).encode, Attempt.successful(deck.code))
   }
 
   case class DeckAndCode(code: String, cardCodes: List[String])

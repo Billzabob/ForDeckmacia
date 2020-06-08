@@ -32,12 +32,13 @@ lazy val commonSettings = Seq(
   organization := "com.github",
   scalaVersion := "2.13.2",
   libraryDependencies ++= Seq(
-    "org.scodec"        %%% "scodec-core"     % "1.11.7",
-    "org.scodec"        %%% "scodec-bits"     % "1.1.15",
-    "org.scalacheck"    %%% "scalacheck"      % "1.14.3"  % Test,
-    "org.scalatest"     %%% "scalatest"       % "3.1.2"   % Test,
-    "org.scalatestplus" %%% "scalacheck-1-14" % "3.1.2.0" % Test
-  )
+    "org.scodec"        %%% "scodec-core"      % "1.11.7",
+    "org.scodec"        %%% "scodec-bits"      % "1.1.15",
+    "org.scalameta"     %%% "munit"            % "0.7.8"   % Test,
+    "org.scalameta"     %%% "munit-scalacheck" % "0.7.8"   % Test
+  ),
+  testFrameworks += new TestFramework("munit.Framework"),
+  scalaJSModuleKind := ModuleKind.CommonJSModule
 )
 
 lazy val releaseSettings = Seq(
