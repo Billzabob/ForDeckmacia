@@ -36,7 +36,8 @@ lazy val commonSettings = Seq(
     "org.scalameta" %%% "munit"            % "0.7.8" % Test,
     "org.scalameta" %%% "munit-scalacheck" % "0.7.8" % Test
   ),
-  testFrameworks += new TestFramework("munit.Framework")
+  testFrameworks += new TestFramework("munit.Framework"),
+  mimaPreviousArtifacts := Set(organization.value %%% moduleName.value % "1.0.0")
 )
 
 lazy val releaseSettings = Seq(
