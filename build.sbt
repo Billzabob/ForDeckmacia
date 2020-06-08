@@ -38,7 +38,7 @@ lazy val commonSettings = Seq(
     "org.scalameta"     %%% "munit-scalacheck" % "0.7.8"   % Test
   ),
   testFrameworks += new TestFramework("munit.Framework"),
-  scalaJSModuleKind := ModuleKind.CommonJSModule
+  scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule))
 )
 
 lazy val releaseSettings = Seq(
