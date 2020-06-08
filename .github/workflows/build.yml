@@ -19,3 +19,7 @@ jobs:
       run: sbt ++${{ matrix.scala }} scalafmtCheckAll
     - name: Run tests
       run: sbt ++${{ matrix.scala }} clean test
+    - name: Run tests ScalaJS 0.6
+      run: sbt ++${{ matrix.scala }} 'project coreJS' clean test
+      env:
+        SCALAJS_VERSION: 0.6.33

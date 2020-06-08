@@ -10,7 +10,7 @@
 A Scala implementation of [Legends of Runeterra deck codes](https://developer.riotgames.com/docs/lor#deck-codes)
 
 ```
-// available for 2.12, 2.13, and ScalaJS
+// available for 2.12, 2.13, and ScalaJS (1.x and 0.6.x)
 libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```
 
