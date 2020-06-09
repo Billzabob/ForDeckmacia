@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.13.2",
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "1.11.7",
-    "org.scodec"    %%% "scodec-bits"      % "1.1.15",
+    "org.scodec"    %%% "scodec-bits"      % "1.1.16",
     "org.scalameta" %%% "munit"            % "0.7.8" % Test,
     "org.scalameta" %%% "munit-scalacheck" % "0.7.8" % Test
   ),
