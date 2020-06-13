@@ -19,10 +19,10 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckcode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
-// deckcode: String = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+val deckCode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+// deckCode: String = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
 
-val deck = Deck.decode(deckcode)
+val deck = Deck.decode(deckCode)
 // deck: scodec.Attempt[Deck] = Successful(
 //   Deck(
 //     HashMap(
