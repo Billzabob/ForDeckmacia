@@ -1,7 +1,7 @@
 package fordeckmacia
 
-import scodec.{Attempt, Codec, Err}
 import scodec.codecs.vintL
+import scodec.{Attempt, Codec, Err}
 
 sealed trait Faction extends Product with Serializable {
   def id: String
