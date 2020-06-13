@@ -31,7 +31,7 @@ object Card {
       _.toList.sortBy(_._1.code).map { case (card, count) => count ~ card.set ~ card.faction ~ card.cardNumber }
     )
 
-  private val factionSetCardsCodec: Codec[Set[Card]] =
+  private[this] val factionSetCardsCodec: Codec[Set[Card]] =
     vintL.consume { count =>
       (vintL ~ Faction.codec ~ listOfN(provide(count), vintL)).xmapc {
         case set ~ faction ~ cardNumbers =>

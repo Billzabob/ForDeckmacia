@@ -3,7 +3,6 @@ package fordeckmacia
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
-import scala.util.Random
 import scodec.Attempt
 
 class DeckTest extends ScalaCheckSuite {
@@ -38,14 +37,6 @@ class DeckTest extends ScalaCheckSuite {
       val reEncoded = decoded.flatMap(_.encode)
       assertEquals(decoded, Attempt.successful(deck))
       assertEquals(reEncoded, encoded)
-    }
-  }
-
-  property("equality doesn't depend on card order") {
-    forAll(deckGenerator) { deck: Deck =>
-      val encoded          = deck.encode
-      val encodedScrambled = Deck.fromCards(Random.shuffle(deck.cardList)).encode
-      assertEquals(encodedScrambled, encoded)
     }
   }
 
@@ -99,7 +90,7 @@ class DeckTest extends ScalaCheckSuite {
     }
   }
 
-  private def verifyDeck(deckString: String) = {
+  def verifyDeck(deckString: String) = {
     val deck = parseDeck(deckString)
     assertEquals(Deck.decode(deck.code).map(_.codeList.sorted), Attempt.successful(deck.cardCodes.sorted))
     assertEquals(Deck.fromCards(deck.cardCodes.flatMap(Card.fromCode)).encode, Attempt.successful(deck.code))
@@ -107,12 +98,12 @@ class DeckTest extends ScalaCheckSuite {
 
   case class DeckAndCode(code: String, cardCodes: List[String])
 
-  private def parseDeck(deck: String): DeckAndCode = {
+  def parseDeck(deck: String): DeckAndCode = {
     val lines = deck.linesIterator.toList.map(_.trim)
     DeckAndCode(lines.head, lines.tail.filterNot(_.isEmpty))
   }
 
-  private val deck1 =
+  val deck1 =
     """CIBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
     01PZ008
     01PZ008
@@ -155,7 +146,7 @@ class DeckTest extends ScalaCheckSuite {
     01NX002
     01NX002"""
 
-  private val deck2 =
+  val deck2 =
     """CIBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
     01SI053
     01SI053

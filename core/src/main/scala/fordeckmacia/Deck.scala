@@ -1,8 +1,8 @@
 package fordeckmacia
 
-import scodec.{Attempt, Codec, Err}
 import scodec.bits.BitVector
 import scodec.codecs._
+import scodec.{Attempt, Codec, Err}
 
 case class Deck(cards: Map[Card, Int]) {
 
@@ -37,11 +37,11 @@ object Deck {
       () ~ cardsOfCount(deck.cards, 3) ~ cardsOfCount(deck.cards, 2) ~ cardsOfCount(deck.cards, 1) ~ cardsOf4Plus(deck.cards)
     }
 
-  private val prefixCodec: Codec[Unit] = (ubyte(4) ~ ubyte(4)).narrowc {
+  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) ~ ubyte(4)).narrowc {
     case format ~ version =>
       Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version)))
   }(_ => supportedFormat ~ maxSupportedVersion)
 
-  private def unsupportedVersion(version: Byte) =
+  private[this] def unsupportedVersion(version: Byte) =
     s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version"
 }
