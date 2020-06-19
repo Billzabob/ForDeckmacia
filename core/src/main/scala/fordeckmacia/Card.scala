@@ -35,7 +35,7 @@ object Card {
     vintL.consume { count =>
       (vintL ~ Faction.codec ~ listOfN(provide(count), vintL)).xmapc {
         case set ~ faction ~ cardNumbers =>
-          cardNumbers.toSet[Int].map(cardNumber => Card(set, faction, cardNumber))
+          cardNumbers.toSet.map(cardNumber => Card(set, faction, cardNumber))
       }(cards => cards.head.set ~ cards.head.faction ~ cards.toList.sortBy(_.cardNumber).map(_.cardNumber))
     }(_.size)
 }
