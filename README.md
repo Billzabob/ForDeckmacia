@@ -19,31 +19,28 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckCode = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
-// deckCode: String = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+val deckCode = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+// deckCode: String = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 
 val deck = Deck.decode(deckCode)
 // deck: scodec.Attempt[Deck] = Successful(
 //   value = Deck(
 //     cards = HashMap(
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 52) -> 1,
-//       Card(set = 2, faction = ShadowIsles, cardNumber = 7) -> 2,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 56) -> 3,
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 54) -> 2,
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 40) -> 3,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 37) -> 2,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 39) -> 3,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 44) -> 2,
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 25) -> 2,
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 43) -> 1,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 53) -> 3,
-//       Card(set = 1, faction = ShadowIsles, cardNumber = 29) -> 3,
-//       Card(set = 2, faction = ShadowIsles, cardNumber = 8) -> 2,
-//       Card(set = 2, faction = ShadowIsles, cardNumber = 3) -> 1,
-//       Card(set = 2, faction = ShadowIsles, cardNumber = 10) -> 3,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 29) -> 3,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 47) -> 3,
-//       Card(set = 2, faction = Bilgewater, cardNumber = 54) -> 1
+//       Card(set = 1, faction = Demacia, cardNumber = 43) -> 3,
+//       Card(set = 2, faction = Demacia, cardNumber = 1) -> 2,
+//       Card(set = 1, faction = Demacia, cardNumber = 29) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 71) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 45) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 37) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 21) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 81) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 36) -> 2,
+//       Card(set = 3, faction = MountTargon, cardNumber = 48) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 41) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 19) -> 2,
+//       Card(set = 3, faction = MountTargon, cardNumber = 85) -> 1,
+//       Card(set = 1, faction = Demacia, cardNumber = 26) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 58) -> 3
 //     )
 //   )
 // )
@@ -51,30 +48,27 @@ val deck = Deck.decode(deckCode)
 val cardCodes = deck.map(_.codes)
 // cardCodes: scodec.Attempt[Map[String, Int]] = Successful(
 //   value = HashMap(
-//     "02BW044" -> 2,
-//     "02BW029" -> 3,
-//     "01SI054" -> 2,
-//     "02BW056" -> 3,
-//     "01SI043" -> 1,
-//     "02BW054" -> 1,
-//     "01SI025" -> 2,
-//     "01SI040" -> 3,
-//     "02BW053" -> 3,
-//     "02BW047" -> 3,
-//     "01SI029" -> 3,
-//     "02SI010" -> 3,
-//     "02SI008" -> 2,
-//     "02BW037" -> 2,
-//     "01SI052" -> 1,
-//     "02SI007" -> 2,
-//     "02BW039" -> 3,
-//     "02SI003" -> 1
+//     "01DE026" -> 3,
+//     "03MT019" -> 2,
+//     "01DE045" -> 3,
+//     "03MT081" -> 3,
+//     "03MT036" -> 2,
+//     "01DE029" -> 3,
+//     "01DE021" -> 3,
+//     "01DE043" -> 3,
+//     "03MT058" -> 3,
+//     "01DE037" -> 3,
+//     "03MT041" -> 3,
+//     "03MT071" -> 3,
+//     "03MT048" -> 3,
+//     "03MT085" -> 1,
+//     "02DE001" -> 2
 //   )
 // )
 
 val encoded = deck.flatMap(_.encode)
 // encoded: scodec.Attempt[String] = Successful(
-//   value = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+//   value = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 // )
 ```
 

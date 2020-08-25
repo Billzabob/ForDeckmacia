@@ -19,7 +19,7 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala mdoc
 import fordeckmacia._
 
-val deckCode = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+val deckCode = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 
 val deck = Deck.decode(deckCode)
 
