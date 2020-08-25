@@ -24,7 +24,7 @@ object Deck {
     Deck(cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) })
 
   val supportedFormat     = 1.toByte
-  val maxSupportedVersion = 2.toByte
+  val maxSupportedVersion = 3.toByte
 
   def codec: Codec[Deck] =
     (prefixCodec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf4PlusCodec).xmapc {

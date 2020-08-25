@@ -19,38 +19,38 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckCode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
-// deckCode: String = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+val deckCode = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+// deckCode: String = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
 
 val deck = Deck.decode(deckCode)
 // deck: scodec.Attempt[Deck] = Successful(
-//   Deck(
-//     HashMap(
-//       Card(1, ShadowIsles, 52) -> 1,
-//       Card(2, ShadowIsles, 7) -> 2,
-//       Card(2, Bilgewater, 56) -> 3,
-//       Card(1, ShadowIsles, 54) -> 2,
-//       Card(1, ShadowIsles, 40) -> 3,
-//       Card(2, Bilgewater, 37) -> 2,
-//       Card(2, Bilgewater, 39) -> 3,
-//       Card(2, Bilgewater, 44) -> 2,
-//       Card(1, ShadowIsles, 25) -> 2,
-//       Card(1, ShadowIsles, 43) -> 1,
-//       Card(2, Bilgewater, 53) -> 3,
-//       Card(1, ShadowIsles, 29) -> 3,
-//       Card(2, ShadowIsles, 8) -> 2,
-//       Card(2, ShadowIsles, 3) -> 1,
-//       Card(2, ShadowIsles, 10) -> 3,
-//       Card(2, Bilgewater, 29) -> 3,
-//       Card(2, Bilgewater, 47) -> 3,
-//       Card(2, Bilgewater, 54) -> 1
+//   value = Deck(
+//     cards = HashMap(
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 52) -> 1,
+//       Card(set = 2, faction = ShadowIsles, cardNumber = 7) -> 2,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 56) -> 3,
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 54) -> 2,
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 40) -> 3,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 37) -> 2,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 39) -> 3,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 44) -> 2,
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 25) -> 2,
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 43) -> 1,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 53) -> 3,
+//       Card(set = 1, faction = ShadowIsles, cardNumber = 29) -> 3,
+//       Card(set = 2, faction = ShadowIsles, cardNumber = 8) -> 2,
+//       Card(set = 2, faction = ShadowIsles, cardNumber = 3) -> 1,
+//       Card(set = 2, faction = ShadowIsles, cardNumber = 10) -> 3,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 29) -> 3,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 47) -> 3,
+//       Card(set = 2, faction = Bilgewater, cardNumber = 54) -> 1
 //     )
 //   )
 // )
 
 val cardCodes = deck.map(_.codes)
 // cardCodes: scodec.Attempt[Map[String, Int]] = Successful(
-//   HashMap(
+//   value = HashMap(
 //     "02BW044" -> 2,
 //     "02BW029" -> 3,
 //     "01SI054" -> 2,
@@ -74,7 +74,7 @@ val cardCodes = deck.map(_.codes)
 
 val encoded = deck.flatMap(_.encode)
 // encoded: scodec.Attempt[String] = Successful(
-//   "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+//   value = "CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
 // )
 ```
 
