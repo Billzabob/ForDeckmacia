@@ -19,62 +19,56 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckCode = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
-// deckCode: String = "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+val deckCode = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+// deckCode: String = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 
 val deck = Deck.decode(deckCode)
 // deck: scodec.Attempt[Deck] = Successful(
-//   Deck(
-//     HashMap(
-//       Card(1, ShadowIsles, 52) -> 1,
-//       Card(2, ShadowIsles, 7) -> 2,
-//       Card(2, Bilgewater, 56) -> 3,
-//       Card(1, ShadowIsles, 54) -> 2,
-//       Card(1, ShadowIsles, 40) -> 3,
-//       Card(2, Bilgewater, 37) -> 2,
-//       Card(2, Bilgewater, 39) -> 3,
-//       Card(2, Bilgewater, 44) -> 2,
-//       Card(1, ShadowIsles, 25) -> 2,
-//       Card(1, ShadowIsles, 43) -> 1,
-//       Card(2, Bilgewater, 53) -> 3,
-//       Card(1, ShadowIsles, 29) -> 3,
-//       Card(2, ShadowIsles, 8) -> 2,
-//       Card(2, ShadowIsles, 3) -> 1,
-//       Card(2, ShadowIsles, 10) -> 3,
-//       Card(2, Bilgewater, 29) -> 3,
-//       Card(2, Bilgewater, 47) -> 3,
-//       Card(2, Bilgewater, 54) -> 1
+//   value = Deck(
+//     cards = HashMap(
+//       Card(set = 1, faction = Demacia, cardNumber = 43) -> 3,
+//       Card(set = 2, faction = Demacia, cardNumber = 1) -> 2,
+//       Card(set = 1, faction = Demacia, cardNumber = 29) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 71) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 45) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 37) -> 3,
+//       Card(set = 1, faction = Demacia, cardNumber = 21) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 81) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 36) -> 2,
+//       Card(set = 3, faction = MountTargon, cardNumber = 48) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 41) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 19) -> 2,
+//       Card(set = 3, faction = MountTargon, cardNumber = 85) -> 1,
+//       Card(set = 1, faction = Demacia, cardNumber = 26) -> 3,
+//       Card(set = 3, faction = MountTargon, cardNumber = 58) -> 3
 //     )
 //   )
 // )
 
 val cardCodes = deck.map(_.codes)
 // cardCodes: scodec.Attempt[Map[String, Int]] = Successful(
-//   HashMap(
-//     "02BW044" -> 2,
-//     "02BW029" -> 3,
-//     "01SI054" -> 2,
-//     "02BW056" -> 3,
-//     "01SI043" -> 1,
-//     "02BW054" -> 1,
-//     "01SI025" -> 2,
-//     "01SI040" -> 3,
-//     "02BW053" -> 3,
-//     "02BW047" -> 3,
-//     "01SI029" -> 3,
-//     "02SI010" -> 3,
-//     "02SI008" -> 2,
-//     "02BW037" -> 2,
-//     "01SI052" -> 1,
-//     "02SI007" -> 2,
-//     "02BW039" -> 3,
-//     "02SI003" -> 1
+//   value = HashMap(
+//     "01DE026" -> 3,
+//     "03MT019" -> 2,
+//     "01DE045" -> 3,
+//     "03MT081" -> 3,
+//     "03MT036" -> 2,
+//     "01DE029" -> 3,
+//     "01DE021" -> 3,
+//     "01DE043" -> 3,
+//     "03MT058" -> 3,
+//     "01DE037" -> 3,
+//     "03MT041" -> 3,
+//     "03MT071" -> 3,
+//     "03MT048" -> 3,
+//     "03MT085" -> 1,
+//     "02DE001" -> 2
 //   )
 // )
 
 val encoded = deck.flatMap(_.encode)
 // encoded: scodec.Attempt[String] = Successful(
-//   "CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA"
+//   value = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 // )
 ```
 
