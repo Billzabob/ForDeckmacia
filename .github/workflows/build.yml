@@ -10,12 +10,12 @@ jobs:
     strategy:
       matrix:
         scala:
-          - 2.12.11
-          - 2.13.2
+          - 2.12.12
+          - 2.13.3
     steps:
     - uses: actions/checkout@v2
     - name: Check formatting
-      if: matrix.scala == '2.13.2'
+      if: matrix.scala == '2.13.3'
       run: sbt ++${{ matrix.scala }} scalafmtCheckAll
     - name: Check bincompat
       run: sbt ++${{ matrix.scala }} coreJVM/mimaReportBinaryIssues
