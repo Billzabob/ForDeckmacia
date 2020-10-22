@@ -10,8 +10,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(
     commonSettings,
     releaseSettings,
-    name := "fordeckmacia",
-    crossScalaVersions := List(scalaVersion.value, "2.12.11"),
+    name := "fordeckmacia"
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
@@ -28,7 +27,8 @@ lazy val docs = project
 
 lazy val commonSettings = Seq(
   organization := "com.github",
-  scalaVersion := "2.13.2",
+  scalaVersion := "2.13.3",
+  crossScalaVersions := List(scalaVersion.value, "2.12.12"),
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "1.11.7",
     "org.scodec"    %%% "scodec-bits"      % "1.1.20",
