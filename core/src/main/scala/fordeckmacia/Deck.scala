@@ -24,22 +24,20 @@ object Deck {
     Deck(cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) })
 
   val supportedFormat     = 1.toByte
-  val maxSupportedVersion = 3.toByte
+  val maxSupportedVersion = 2.toByte
 
   def codec: Codec[Deck] =
-    (prefixCodec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf4PlusCodec).xmapc {
-      case _ ~ cardsOf3 ~ cardsOf2 ~ cardsOf1 ~ cardsOf4Plus =>
-        def toMap[A](set: Set[A], count: Int): Map[A, Int] = set.map(_ -> count).toMap
-        Deck(toMap(cardsOf3, 3) ++ toMap(cardsOf2, 2) ++ toMap(cardsOf1, 1) ++ cardsOf4Plus)
+    (prefixCodec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf1To3Codec ~ Card.cardsOf4PlusCodec).xmapc { case _ ~ cardsOf3 ~ cardsOf2 ~ cardsOf1 ~ cardsOf4Plus =>
+      def toMap[A](set: Set[A], count: Int): Map[A, Int] = set.map(_ -> count).toMap
+      Deck(toMap(cardsOf3, 3) ++ toMap(cardsOf2, 2) ++ toMap(cardsOf1, 1) ++ cardsOf4Plus)
     } { deck =>
       def cardsOfCount[A](map: Map[A, Int], count: Int): Set[A] = map.filter(_._2 == count).keySet
       def cardsOf4Plus[A](map: Map[A, Int]): Map[A, Int]        = map.filter(_._2 >= 4)
       () ~ cardsOfCount(deck.cards, 3) ~ cardsOfCount(deck.cards, 2) ~ cardsOfCount(deck.cards, 1) ~ cardsOf4Plus(deck.cards)
     }
 
-  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) ~ ubyte(4)).narrowc {
-    case format ~ version =>
-      Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version)))
+  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) ~ ubyte(4)).narrowc { case format ~ version =>
+    Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version)))
   }(_ => supportedFormat ~ maxSupportedVersion)
 
   private[this] def unsupportedVersion(version: Byte) =

@@ -10,7 +10,7 @@
 A Scala implementation of [Legends of Runeterra deck codes](https://developer.riotgames.com/docs/lor#deck-codes)
 
 ```scala
-// available for 2.12, 2.13, and ScalaJS (1.x and 0.6.x)
+// available for 2.12, 2.13, and ScalaJS 1.x
 libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```
 
@@ -19,7 +19,7 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala mdoc
 import fordeckmacia._
 
-val deckCode = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+val deckCode = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 
 val deck = Deck.decode(deckCode)
 
