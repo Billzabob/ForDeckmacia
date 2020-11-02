@@ -26,14 +26,13 @@ lazy val docs = project
   .enablePlugins(MdocPlugin)
 
 lazy val commonSettings = Seq(
-  organization := "com.github",
   scalaVersion := "2.13.3",
   crossScalaVersions := List(scalaVersion.value, "2.12.12"),
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "1.11.7",
     "org.scodec"    %%% "scodec-bits"      % "1.1.20",
-    "org.scalameta" %%% "munit"            % "0.7.14" % Test,
-    "org.scalameta" %%% "munit-scalacheck" % "0.7.14" % Test
+    "org.scalameta" %%% "munit"            % "0.7.15" % Test,
+    "org.scalameta" %%% "munit-scalacheck" % "0.7.15" % Test
   ),
   testFrameworks += new TestFramework("munit.Framework"),
   mimaPreviousArtifacts := Set(organization.value %%% moduleName.value % "1.0.0")

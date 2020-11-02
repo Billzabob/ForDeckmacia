@@ -56,6 +56,10 @@ class DeckTest extends ScalaCheckSuite {
     assert(clue(Deck.decode("CIAAAAA01")).isFailure)
   }
 
+  test("work for lowercase deck codes") {
+    assert(clue(Deck.decode("cibqcaqfbibacbi5facqebq5e4xtkoadaibamjjmaibakbyiaiaqkgjwamaqebrwaebakaycaecswna")).isSuccessful)
+  }
+
   test("work for decks") {
     verifyDeck(deck1)
     verifyDeck(deck2)
