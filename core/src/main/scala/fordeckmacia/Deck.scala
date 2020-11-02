@@ -15,7 +15,7 @@ case class Deck(cards: Map[Card, Int]) {
 
 object Deck {
   def decode(code: String): Attempt[Deck] =
-    Attempt.fromEither(BitVector.fromBase32Descriptive(code).left.map(Err.apply)).flatMap(codec.complete.decodeValue)
+    Attempt.fromEither(BitVector.fromBase32Descriptive(code.toUpperCase).left.map(Err.apply)).flatMap(codec.complete.decodeValue)
 
   def encode(deck: Deck): Attempt[String] =
     codec.encode(deck).map(_.toBase32.takeWhile(_ != '='))
