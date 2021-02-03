@@ -3,6 +3,7 @@ package fordeckmacia
 import scala.util.Try
 import scodec.Codec
 import scodec.codecs._
+import shapeless.{::, HNil}
 
 case class Card(set: Int, faction: Faction, cardNumber: Int) {
   require(cardNumber < 1000 && cardNumber >= 0, s"Invalid card number: $cardNumber")
@@ -26,15 +27,15 @@ object Card {
     )
 
   private[fordeckmacia] def cardsOf4PlusCodec: Codec[Map[Card, Int]] =
-    list(vint ~ vint ~ Faction.codec ~ vint).xmap(
-      _.map { case count ~ set ~ faction ~ cardNumber => Card(set, faction, cardNumber) -> count }.toMap,
-      _.toList.sortBy(_._1.code).map { case (card, count) => count ~ card.set ~ card.faction ~ card.cardNumber }
+    list(vint :: vint :: Faction.codec :: vint).xmap(
+      _.map { case count :: set :: faction :: cardNumber :: HNil => Card(set, faction, cardNumber) -> count }.toMap,
+      _.toList.sortBy(_._1.code).map { case (card, count) => count :: card.set :: card.faction :: card.cardNumber :: HNil }
     )
 
   private[this] val factionSetCardsCodec: Codec[Set[Card]] =
     vint.consume { count =>
-      (vint ~ Faction.codec ~ listOfN(provide(count), vint)).xmapc { case set ~ faction ~ cardNumbers =>
+      (vint :: Faction.codec :: listOfN(provide(count), vint)).xmapc { case set :: faction :: cardNumbers :: HNil =>
         cardNumbers.toSet.map(cardNumber => Card(set, faction, cardNumber))
-      }(cards => cards.head.set ~ cards.head.faction ~ cards.toList.sortBy(_.cardNumber).map(_.cardNumber))
+      }(cards => cards.head.set :: cards.head.faction :: cards.toList.sortBy(_.cardNumber).map(_.cardNumber) :: HNil)
     }(_.size)
 }
