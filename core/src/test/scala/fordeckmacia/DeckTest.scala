@@ -60,6 +60,10 @@ class DeckTest extends ScalaCheckSuite {
     assert(clue(Deck.decode("cibqcaqfbibacbi5facqebq5e4xtkoadaibamjjmaibakbyiaiaqkgjwamaqebrwaebakaycaecswna")).isSuccessful)
   }
 
+  test("works for deck codes with cards requiring multi-byte varints") {
+    assert(clue(Deck.decode("CIAQUAYJBEOESTCUKVLGBWIB3UAQEAIBAUMQGAYJAIRWIAQBAECR2AIDBEGQ")).isSuccessful)
+  }
+
   test("work for decks") {
     verifyDeck(deck1)
     verifyDeck(deck2)
