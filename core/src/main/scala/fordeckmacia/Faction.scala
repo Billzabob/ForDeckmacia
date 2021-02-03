@@ -1,6 +1,6 @@
 package fordeckmacia
 
-import scodec.codecs.vintL
+import scodec.codecs.vint
 import scodec.{Attempt, Codec, Err}
 
 sealed trait Faction extends Product with Serializable {
@@ -24,5 +24,5 @@ object Faction {
   def fromId(id: String): Option[Faction] = allFactions.find(_.id == id)
 
   private[fordeckmacia] val codec: Codec[Faction] =
-    vintL.narrow(factionInt => Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt")), _.int)
+    vint.narrow(factionInt => Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt")), _.int)
 }
