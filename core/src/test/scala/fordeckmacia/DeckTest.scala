@@ -45,23 +45,23 @@ class DeckTest extends ScalaCheckSuite {
   }
 
   test("fail on invalid deck codes") {
-    assert(clue(Deck.decode("CIAAAAI")).isFailure)
+    assert(clue(Deck.decode("CMAAAAI")).isFailure)
   }
 
   test("fail on unknown factions") {
-    assert(clue(Deck.decode("CIAAAAIBAB7QA")).isFailure)
+    assert(clue(Deck.decode("CMAAAAIBAB7QA")).isFailure)
   }
 
   test("fail on invalid Base32") {
-    assert(clue(Deck.decode("CIAAAAA01")).isFailure)
+    assert(clue(Deck.decode("CMAAAAA01")).isFailure)
   }
 
   test("work for lowercase deck codes") {
-    assert(clue(Deck.decode("cibqcaqfbibacbi5facqebq5e4xtkoadaibamjjmaibakbyiaiaqkgjwamaqebrwaebakaycaecswna")).isSuccessful)
+    assert(clue(Deck.decode("cmbqcaqfbibacbi5facqebq5e4xtkoadaibamjjmaibakbyiaiaqkgjwamaqebrwaebakaycaecswna")).isSuccessful)
   }
 
   test("works for deck codes with cards requiring multi-byte varints") {
-    assert(clue(Deck.decode("CIAQUAYJBEOESTCUKVLGBWIB3UAQEAIBAUMQGAYJAIRWIAQBAECR2AIDBEGQ")).isSuccessful)
+    assert(clue(Deck.decode("CMAQUAYJBEOESTCUKVLGBWIB3UAQEAIBAUMQGAYJAIRWIAQBAECR2AIDBEGQ")).isSuccessful)
   }
 
   test("work for decks") {
@@ -73,9 +73,9 @@ class DeckTest extends ScalaCheckSuite {
   test("generate the same codes as the game") {
     def verifyCode(code: String) = assertEquals(Deck.decode(code).flatMap(_.encode), Attempt.successful(code))
     // These codes were exported directly from the game
-    verifyCode("CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA")
-    verifyCode("CICACAQEBABAEAQBBECACAQCBQTDSBIBAQIBWJZUHAAQEAICEUYQA")
-    verifyCode("CIAAAAH7777X6AIFGU")
+    verifyCode("CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA")
+    verifyCode("CMCACAQEBABAEAQBBECACAQCBQTDSBIBAQIBWJZUHAAQEAICEUYQA")
+    verifyCode("CMAAAAH7777X6AIFGU")
   }
 
   test("idempotent deck to and from card list") {
@@ -112,7 +112,7 @@ class DeckTest extends ScalaCheckSuite {
   }
 
   val deck1 =
-    """CIBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
+    """CMBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
     01PZ008
     01PZ008
     01PZ008
@@ -155,7 +155,7 @@ class DeckTest extends ScalaCheckSuite {
     01NX002"""
 
   val deck2 =
-    """CIBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
+    """CMBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
     01SI053
     01SI053
     01SI053
@@ -198,7 +198,7 @@ class DeckTest extends ScalaCheckSuite {
     01SI015"""
 
   val deck3 =
-    """CIAAAAAKAECTK
+    """CMAAAAAKAECTK
     01SI053
     01SI053
     01SI053
