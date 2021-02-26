@@ -27,7 +27,7 @@ lazy val docs = project
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.4",
-  crossScalaVersions := List(scalaVersion.value, "2.12.13"),
+  crossScalaVersions := List(scalaVersion.value, "2.13.5"),
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "1.11.7",
     "org.scodec"    %%% "scodec-bits"      % "1.1.24",
