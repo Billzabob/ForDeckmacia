@@ -19,8 +19,8 @@ libraryDependencies += "com.github.billzabob" %% "fordeckmacia" % "version"
 ```scala
 import fordeckmacia._
 
-val deckCode = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
-// deckCode: String = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+val deckCode = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+// deckCode: String = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 
 val deck = Deck.decode(deckCode)
 // deck: scodec.Attempt[Deck] = Successful(
@@ -68,7 +68,7 @@ val cardCodes = deck.map(_.codes)
 
 val encoded = deck.flatMap(_.encode)
 // encoded: scodec.Attempt[String] = Successful(
-//   value = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+//   value = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 // )
 ```
 
