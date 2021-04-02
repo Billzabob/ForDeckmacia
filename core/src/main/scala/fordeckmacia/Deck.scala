@@ -38,9 +38,9 @@ object Deck {
       () :: cardsOfCount(deck.cards, 3) :: cardsOfCount(deck.cards, 2) :: cardsOfCount(deck.cards, 1) :: cardsOf4Plus(deck.cards) :: HNil
     }
 
-  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) ~ ubyte(4)).narrowc { case format ~ version =>
+  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) :: ubyte(4)).narrowc { case format :: version :: HNil =>
     Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version)))
-  }(_ => supportedFormat ~ maxSupportedVersion)
+  }(_ => supportedFormat :: maxSupportedVersion :: HNil)
 
   private[this] def unsupportedVersion(version: Byte) =
     s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version"
