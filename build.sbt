@@ -26,7 +26,7 @@ lazy val docs = project
   .enablePlugins(MdocPlugin)
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.4",
+  scalaVersion := "2.13.6",
   crossScalaVersions := List(scalaVersion.value, "2.12.13"),
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "1.11.7",
