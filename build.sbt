@@ -29,7 +29,7 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.13.4",
   crossScalaVersions := List(scalaVersion.value, "2.12.13"),
   libraryDependencies ++= Seq(
-    "org.scodec"    %%% "scodec-core"      % "1.11.7",
+    "org.scodec"    %%% "scodec-core"      % "1.11.8",
     "org.scodec"    %%% "scodec-bits"      % "1.1.27",
     "org.scalameta" %%% "munit"            % "0.7.26" % Test,
     "org.scalameta" %%% "munit-scalacheck" % "0.7.26" % Test
