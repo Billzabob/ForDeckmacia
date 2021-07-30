@@ -1,6 +1,5 @@
 package fordeckmacia
 
-import scala.util.Try
 import scodec.Codec
 import scodec.codecs.*
 
@@ -13,9 +12,9 @@ object Card:
 
   def fromCode(code: String): Option[Card] =
     for
-      set     <- Try(code.take(2).toInt).toOption
+      set     <- code.take(2).toIntOption
       faction <- Faction.fromId(code.slice(2, 4))
-      number  <- Try(code.slice(4, 7).toInt).toOption
+      number  <- code.slice(4, 7).toIntOption
     yield Card(set, faction, number)
 
   private[fordeckmacia] def cardsOf1To3Codec: Codec[Set[Card]] =
