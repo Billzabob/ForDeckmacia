@@ -3,12 +3,11 @@ package fordeckmacia
 import scodec.codecs.vint
 import scodec.{Attempt, Codec, Err}
 
-sealed trait Faction extends Product with Serializable {
+sealed trait Faction extends Product with Serializable:
   def id: String
   def int: Int
-}
 
-object Faction {
+object Faction:
   case object Demacia         extends Faction { val id = "DE"; val int = 0  }
   case object Freljord        extends Faction { val id = "FR"; val int = 1  }
   case object Ionia           extends Faction { val id = "IO"; val int = 2  }
@@ -27,4 +26,3 @@ object Faction {
 
   private[fordeckmacia] val codec: Codec[Faction] =
     vint.narrow(factionInt => Attempt.fromOption(Faction.fromInt(factionInt), Err(s"Invalid faction number $factionInt")), _.int)
-}

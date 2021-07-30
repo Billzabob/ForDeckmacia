@@ -2,7 +2,7 @@ package fordeckmacia
 
 import munit.FunSuite
 
-class CardTest extends FunSuite {
+class CardTest extends FunSuite:
   test("invalid cards") {
     intercept[IllegalArgumentException](Card(100, Faction.Bilgewater, 1))
     intercept[IllegalArgumentException](Card(1, Faction.Bilgewater, 1000))
@@ -16,4 +16,3 @@ class CardTest extends FunSuite {
     assertEquals(Card.fromCode("11ZZ111"), None)
     assertEquals(Card.fromCode("11NXABC"), None)
   }
-}
