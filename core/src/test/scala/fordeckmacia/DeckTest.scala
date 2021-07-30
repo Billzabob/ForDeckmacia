@@ -64,6 +64,10 @@ class DeckTest extends ScalaCheckSuite {
     assert(clue(Deck.decode("CMAQUAYJBEOESTCUKVLGBWIB3UAQEAIBAUMQGAYJAIRWIAQBAECR2AIDBEGQ")).isSuccessful)
   }
 
+  test("works empty deck") {
+    assertEquals(Deck.encode(Deck(Map.empty)), Attempt.successful("CEAAAAA"))
+  }
+
   test("work for decks") {
     verifyDeck(deck1)
     verifyDeck(deck2)
@@ -73,9 +77,9 @@ class DeckTest extends ScalaCheckSuite {
   test("generate the same codes as the game") {
     def verifyCode(code: String) = assertEquals(Deck.decode(code).flatMap(_.encode), Attempt.successful(code))
     // These codes were exported directly from the game
-    verifyCode("CMBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA")
-    verifyCode("CMCACAQEBABAEAQBBECACAQCBQTDSBIBAQIBWJZUHAAQEAICEUYQA")
-    verifyCode("CMAAAAH7777X6AIFGU")
+    verifyCode("CIBQCAQFBIBACBI5FACQEBQ5E4XTKOADAIBAMJJMAIBAKBYIAIAQKGJWAMAQEBRWAEBAKAYCAECSWNA")
+    verifyCode("CECACAQEBABAEAQBBECACAQCBQTDSBIBAQIBWJZUHAAQEAICEUYQA")
+    verifyCode("CEAAAAH7777X6AIFGU")
   }
 
   test("idempotent deck to and from card list") {
@@ -112,7 +116,7 @@ class DeckTest extends ScalaCheckSuite {
   }
 
   val deck1 =
-    """CMBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
+    """CEBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
     01PZ008
     01PZ008
     01PZ008
@@ -155,7 +159,7 @@ class DeckTest extends ScalaCheckSuite {
     01NX002"""
 
   val deck2 =
-    """CMBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
+    """CEBQCAQEBABACBA3GQCQCBI5EEUDKNQDAEBAIBQCAECB6MAEAECQCKZRHAAQEAIFB4MQ
     01SI053
     01SI053
     01SI053
@@ -198,7 +202,7 @@ class DeckTest extends ScalaCheckSuite {
     01SI015"""
 
   val deck3 =
-    """CMAAAAAKAECTK
+    """CEAAAAAKAECTK
     01SI053
     01SI053
     01SI053
