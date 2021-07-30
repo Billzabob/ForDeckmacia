@@ -68,7 +68,7 @@ val cardCodes = deck.map(_.codes)
 
 val encoded = deck.flatMap(_.encode)
 // encoded: scodec.Attempt[String] = Successful(
-//   value = "CMBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
+//   value = "CIBAKAYJFEYDUR2RAYAQAFI2DUSSWLICAEBAAAICAMERGJABAEBQSVI"
 // )
 ```
 

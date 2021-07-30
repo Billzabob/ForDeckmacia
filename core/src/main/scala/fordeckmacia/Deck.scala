@@ -25,7 +25,7 @@ object Deck {
     Deck(cards.groupBy(card => card).map { case (card, cards) => (card, cards.size) })
 
   val supportedFormat     = 1.toByte
-  val maxSupportedVersion = 3.toByte
+  val maxSupportedVersion = 4.toByte
 
   def codec: Codec[Deck] =
     (prefixCodec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf4PlusCodec).xmapc {
@@ -35,12 +35,30 @@ object Deck {
     } { deck =>
       def cardsOfCount[A](map: Map[A, Int], count: Int): Set[A] = map.filter(_._2 == count).keySet
       def cardsOf4Plus[A](map: Map[A, Int]): Map[A, Int]        = map.filter(_._2 >= 4)
-      () :: cardsOfCount(deck.cards, 3) :: cardsOfCount(deck.cards, 2) :: cardsOfCount(deck.cards, 1) :: cardsOf4Plus(deck.cards) :: HNil
+      calculateVersion(deck) :: cardsOfCount(deck.cards, 3) :: cardsOfCount(deck.cards, 2) :: cardsOfCount(deck.cards, 1) :: cardsOf4Plus(deck.cards) :: HNil
     }
 
-  private[this] val prefixCodec: Codec[Unit] = (ubyte(4) :: ubyte(4)).narrowc { case format :: version :: HNil =>
-    Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version)))
-  }(_ => supportedFormat :: maxSupportedVersion :: HNil)
+  private[this] val prefixCodec: Codec[Byte] = (ubyte(4) :: ubyte(4)).narrowc { case format :: version :: HNil =>
+    Attempt.guard(format == supportedFormat && version <= maxSupportedVersion, Err(unsupportedVersion(version))).map(_ => version)
+  }(version => supportedFormat :: version :: HNil)
+
+  private[this] def calculateVersion(deck: Deck): Byte = {
+    val versions = deck.cards.keys.map(_.faction).map(versionsForFactions)
+    if (versions.isEmpty) 1 else versions.max
+  }
+
+  private[this] val versionsForFactions: Faction => Byte = {
+    case Faction.Demacia         => 1
+    case Faction.Freljord        => 1
+    case Faction.Ionia           => 1
+    case Faction.Noxus           => 1
+    case Faction.PiltoverAndZaun => 1
+    case Faction.ShadowIsles     => 1
+    case Faction.Bilgewater      => 2
+    case Faction.MountTargon     => 2
+    case Faction.Shurima         => 3
+    case Faction.BandleCity      => 4
+  }
 
   private[this] def unsupportedVersion(version: Byte) =
     s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version"

@@ -10,8 +10,8 @@ jobs:
     strategy:
       matrix:
         scala:
-          - 2.12.13
-          - 2.13.4
+          - 2.12.14
+          - 2.13.6
     steps:
     - uses: actions/checkout@v2
     - name: Check formatting
