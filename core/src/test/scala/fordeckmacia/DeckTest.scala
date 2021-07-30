@@ -2,10 +2,10 @@ package fordeckmacia
 
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
-import org.scalacheck.Prop._
+import org.scalacheck.Prop.*
 import scodec.Attempt
 
-class DeckTest extends ScalaCheckSuite {
+class DeckTest extends ScalaCheckSuite:
 
   override def scalaCheckTestParameters =
     super.scalaCheckTestParameters
@@ -13,7 +13,7 @@ class DeckTest extends ScalaCheckSuite {
 
   val cardGenerator: Gen[Card] =
     for {
-      set     <- Gen.choose(1, 2)
+      set     <- Gen.choose(1, 3)
       faction <- Gen.oneOf(Faction.allFactions)
       cardNum <- Gen.choose(0, 999)
     } yield Card(set, faction, cardNum)
@@ -31,7 +31,7 @@ class DeckTest extends ScalaCheckSuite {
     } yield Deck(cards.toMap)
 
   property("idempotent deck encoding/decoding") {
-    forAll(deckGenerator) { deck: Deck =>
+    forAll(deckGenerator) { (deck: Deck) =>
       val encoded   = deck.encode
       val decoded   = encoded.flatMap(Deck.decode)
       val reEncoded = decoded.flatMap(_.encode)
@@ -83,7 +83,7 @@ class DeckTest extends ScalaCheckSuite {
   }
 
   test("idempotent deck to and from card list") {
-    forAll(deckGenerator) { deck: Deck =>
+    forAll(deckGenerator) { (deck: Deck) =>
       val encoded   = deck.codeList.sorted
       val decoded   = Deck.fromCards(encoded.flatMap(Card.fromCode))
       val reEncoded = decoded.codeList.sorted
@@ -93,27 +93,25 @@ class DeckTest extends ScalaCheckSuite {
   }
 
   test("idempotent deck to and from card codes") {
-    forAll(deckGenerator) { deck: Deck =>
+    forAll(deckGenerator) { (deck: Deck) =>
       val encoded   = deck.codes
-      val decoded   = Deck.fromCards(encoded.toList.flatMap { case (code, count) => List.fill(count)(code) }.flatMap(Card.fromCode))
+      val decoded   = Deck.fromCards(encoded.toList.flatMap((code, count) => List.fill(count)(code)).flatMap(Card.fromCode))
       val reEncoded = decoded.codes
       assertEquals(decoded, deck)
       assertEquals(reEncoded, encoded)
     }
   }
 
-  def verifyDeck(deckString: String) = {
+  def verifyDeck(deckString: String) =
     val deck = parseDeck(deckString)
     assertEquals(Deck.decode(deck.code).map(_.codeList.sorted), Attempt.successful(deck.cardCodes.sorted))
     assertEquals(Deck.fromCards(deck.cardCodes.flatMap(Card.fromCode)).encode, Attempt.successful(deck.code))
-  }
 
   case class DeckAndCode(code: String, cardCodes: List[String])
 
-  def parseDeck(deck: String): DeckAndCode = {
+  def parseDeck(deck: String): DeckAndCode =
     val lines = deck.linesIterator.toList.map(_.trim)
     DeckAndCode(lines.head, lines.tail.filterNot(_.isEmpty))
-  }
 
   val deck1 =
     """CEBQEAQDAMCAIAIEBAITINQGAEBQEDY6EUUC6AICAECB6JYA
@@ -213,4 +211,3 @@ class DeckTest extends ScalaCheckSuite {
     01SI053
     01SI053
     01SI053"""
-}
