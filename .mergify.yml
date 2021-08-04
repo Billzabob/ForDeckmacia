@@ -10,7 +10,7 @@
   - name: merge scala-steward's PRs
     conditions:
       - author=scala-steward
-      - status-success=build
+      - status-success~=^build \(3
     actions:
       merge:
         method: squash
