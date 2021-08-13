@@ -1,6 +1,7 @@
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
-lazy val fordeckmacia = project.in(file("."))
+lazy val fordeckmacia = project
+  .in(file("."))
   .settings(commonSettings, releaseSettings, publish / skip := true)
   .aggregate(core.jvm, core.js)
 
@@ -18,8 +19,8 @@ lazy val docs = project
   .in(file("fordeckmacia-docs"))
   .settings(
     commonSettings,
-    mdocIn := file("docs/README.md"),
-    mdocOut := file("README.md"),
+    mdocIn         := file("docs/README.md"),
+    mdocOut        := file("README.md"),
     publish / skip := true
   )
   .dependsOn(core.jvm)
@@ -40,8 +41,8 @@ lazy val commonSettings = Seq(
 
 lazy val releaseSettings = Seq(
   organization := "com.github.billzabob",
-  homepage := Some(url("https://github.com/billzabob/fordeckmacia")),
-  licenses := Seq("LGPL-3.0" -> url("https://www.gnu.org/licenses/lgpl-3.0.en.html")),
+  homepage     := Some(url("https://github.com/billzabob/fordeckmacia")),
+  licenses     := Seq("LGPL-3.0" -> url("https://www.gnu.org/licenses/lgpl-3.0.en.html")),
   developers := List(
     Developer(
       "billzabob",
