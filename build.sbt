@@ -28,7 +28,7 @@ lazy val docs = project
 
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-new-syntax"),
-  scalaVersion := "3.0.2",
+  scalaVersion := "3.1.0",
   libraryDependencies ++= Seq(
     "org.scodec"    %%% "scodec-core"      % "2.0.0",
     "org.scodec"    %%% "scodec-bits"      % "1.1.29",
