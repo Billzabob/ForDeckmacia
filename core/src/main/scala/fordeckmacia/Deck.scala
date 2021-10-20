@@ -29,7 +29,8 @@ object Deck:
     (prefixCodec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf4PlusCodec).xmap(
       (_, cardsOf3, cardsOf2, cardsOf1, cardsOf4Plus) =>
         def toMap[A](set: Set[A], count: Int): Map[A, Int] = set.map(_ -> count).toMap
-        Deck(toMap(cardsOf3, 3) ++ toMap(cardsOf2, 2) ++ toMap(cardsOf1, 1) ++ cardsOf4Plus),
+        Deck(toMap(cardsOf3, 3) ++ toMap(cardsOf2, 2) ++ toMap(cardsOf1, 1) ++ cardsOf4Plus)
+      ,
       deck =>
         def cardsOfCount[A](map: Map[A, Int], count: Int): Set[A] = map.filter(_._2 == count).keySet
         def cardsOf4Plus[A](map: Map[A, Int]): Map[A, Int]        = map.filter(_._2 >= 4)
