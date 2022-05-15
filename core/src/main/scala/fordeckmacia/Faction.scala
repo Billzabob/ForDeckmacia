@@ -18,7 +18,7 @@ object Faction:
   case object Shurima         extends Faction { val id = "SH"; val int = 7  }
   case object MountTargon     extends Faction { val id = "MT"; val int = 9  }
   case object BandleCity      extends Faction { val id = "BC"; val int = 10 }
-  case object Runeterra       extends Faction { val id = "RU"; val int = 11 }
+  case object Runeterra       extends Faction { val id = "RU"; val int = 12 }
 
   val allFactions = List(
     Demacia,
