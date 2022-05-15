@@ -18,8 +18,21 @@ object Faction:
   case object Shurima         extends Faction { val id = "SH"; val int = 7  }
   case object MountTargon     extends Faction { val id = "MT"; val int = 9  }
   case object BandleCity      extends Faction { val id = "BC"; val int = 10 }
+  case object Runeterra       extends Faction { val id = "RU"; val int = 12 }
 
-  val allFactions = List(Demacia, Freljord, Ionia, Noxus, PiltoverAndZaun, ShadowIsles, Bilgewater, Shurima, MountTargon, BandleCity)
+  val allFactions = List(
+    Demacia,
+    Freljord,
+    Ionia,
+    Noxus,
+    PiltoverAndZaun,
+    ShadowIsles,
+    Bilgewater,
+    Shurima,
+    MountTargon,
+    BandleCity,
+    Runeterra
+  )
 
   def fromInt(int: Int): Option[Faction]  = allFactions.find(_.int == int)
   def fromId(id: String): Option[Faction] = allFactions.find(_.id == id)

@@ -22,8 +22,21 @@ object Deck:
   def fromCards(cards: List[Card]): Deck =
     Deck(cards.groupBy(card => card).map((card, cards) => (card, cards.size)))
 
+  private[this] val versionsForFactions: Faction => Byte =
+    case Faction.Demacia         => 1
+    case Faction.Freljord        => 1
+    case Faction.Ionia           => 1
+    case Faction.Noxus           => 1
+    case Faction.PiltoverAndZaun => 1
+    case Faction.ShadowIsles     => 1
+    case Faction.Bilgewater      => 2
+    case Faction.MountTargon     => 2
+    case Faction.Shurima         => 3
+    case Faction.BandleCity      => 4
+    case Faction.Runeterra       => 5
+
   val supportedFormat     = 1.toByte
-  val maxSupportedVersion = 4.toByte
+  val maxSupportedVersion = Faction.allFactions.map(versionsForFactions).max
 
   def codec: Codec[Deck] =
     (prefixCodec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf1To3Codec :: Card.cardsOf4PlusCodec).xmap(
@@ -44,18 +57,6 @@ object Deck:
 
   private[this] def calculateVersion(deck: Deck): Byte =
     deck.cards.keys.map(_.faction).map(versionsForFactions).maxOption.getOrElse(1.toByte)
-
-  private[this] val versionsForFactions: Faction => Byte =
-    case Faction.Demacia         => 1
-    case Faction.Freljord        => 1
-    case Faction.Ionia           => 1
-    case Faction.Noxus           => 1
-    case Faction.PiltoverAndZaun => 1
-    case Faction.ShadowIsles     => 1
-    case Faction.Bilgewater      => 2
-    case Faction.MountTargon     => 2
-    case Faction.Shurima         => 3
-    case Faction.BandleCity      => 4
 
   private[this] def unsupportedVersion(version: Byte) =
     s"Unsupported deckcode version or format: $version. Please update ForDeckmacia or create an Issue/PR if there isn't a newer version"
