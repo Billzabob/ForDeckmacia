@@ -30,7 +30,7 @@ lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-new-syntax"),
   scalaVersion := "3.1.3",
   libraryDependencies ++= Seq(
-    "org.scodec"    %%% "scodec-core"      % "2.1.0",
+    "org.scodec"    %%% "scodec-core"      % "2.2.0",
     "org.scodec"    %%% "scodec-bits"      % "1.1.34",
     "org.scalameta" %%% "munit"            % "0.7.29" % Test,
     "org.scalameta" %%% "munit-scalacheck" % "0.7.29" % Test
