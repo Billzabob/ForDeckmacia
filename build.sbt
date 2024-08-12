@@ -33,7 +33,7 @@ lazy val commonSettings = Seq(
     "org.scodec"    %%% "scodec-core"      % "2.2.0",
     "org.scodec"    %%% "scodec-bits"      % "1.1.34",
     "org.scalameta" %%% "munit"            % "0.7.29" % Test,
-    "org.scalameta" %%% "munit-scalacheck" % "0.7.29" % Test
+    "org.scalameta" %%% "munit-scalacheck" % "1.0.0"  % Test
   ),
   testFrameworks += new TestFramework("munit.Framework")
   // mimaPreviousArtifacts := Set(organization.value %%% moduleName.value % "1.0.11")
